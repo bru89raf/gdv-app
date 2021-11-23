@@ -1,59 +1,13 @@
 <template>
+    <!-- 
+        !!! This Page are note used !!! 
+            This logic was moved to  __> Pacotes.vue
+            We have this page here  just to backup.
+    -->
     <div>
         EDITAR PACK
 
-            <!-- <div class="row">
-                <div class="col-sm-4 offset-sm-4">
-                    <div>
-
-                            <form @submit.prevent="onUpdatePackFormSubmit" >
-                                        
-                                <div class="form-group">
-                                    <label for="packName">Pack</label>
-                                    <input type="text" v-model="pack.nome" id="packName" name="packName" class="form-control" :class="{ 'is-invalid': submitted && $v.pack.nome.$error }" />
-                                    <div v-if="submitted && !$v.pack.nome.required" class="invalid-feedback">Nome do Pack Obrigatorio!</div>
-                                </div>
-
-                                
-                                <div class="form-group">
-                                    <label for="packDescicao">Descrição</label>
-                                    <input type="text" v-model="pack.descricao" id="packDescicao" name="packDescicao" class="form-control" />
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label for="packPrice">Preço</label>
-                                    <input type="number" v-model="pack.preco" id="packPrice" name="packPrice"  min="0" class="form-control" :class="{ 'is-invalid': submitted && $v.pack.preco.$error }" />
-                                    <div v-if="submitted && !$v.pack.preco.required" class="invalid-feedback">Preço Obrigatorio!</div>
-                                </div>
-
-                                <div class="form-group">                                    
-                                    
-                                    <b-button pill variant="success">
-                                 
-                                        <b-icon icon="plus" ></b-icon>
-
-                                    </b-button>
-                                    
-                                    
-                                    <b-button pill variant="outline-primary" @click="backtoPackList()" icon="arrow-up">
-                                        <b-icon icon="arrow-left" aria-hidden="true"></b-icon>     
-                                    </b-button> 
-                                    
-
-
-
-
-                                </div>
-                            </form>
-
-
-                    </div>
-                </div>
-           </div> -->
-
-
-                      <b-container>
+        <b-container>
             <b-row>
                 <div class="col-sm-4 offset-sm-4">
                            <form @submit.prevent="onUpdatePackFormSubmit" >
@@ -133,7 +87,7 @@
 
                 </div>
             </b-row>
-          </b-container>
+        </b-container>
 
 
 

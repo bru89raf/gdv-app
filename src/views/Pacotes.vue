@@ -1,4 +1,12 @@
 <template>
+
+    <!-- 
+        !!! This Page are note used !!! 
+            This logic was moved to  __> Pacotes.vue
+            We have this page here  just to backup.
+    -->
+
+
     <div>
         <!-- PACOTES  -->
         <label for="bcontainer-pack"><b>Novo Pack</b></label>

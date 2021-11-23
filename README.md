@@ -13,6 +13,7 @@ What you can find on the application:
     * Insert 
     * Update
     * Delete
+    * VueGoodTable
 
 *Note*: This is the first project, so, if you find some issues / probems or things to improve, please let me know.
 ```

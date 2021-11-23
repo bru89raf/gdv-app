@@ -1,6 +1,7 @@
 <template>
     
     <div>
+        
         <b-spinner 
             style="width: 3rem; height: 3rem;" 
             type="grow"

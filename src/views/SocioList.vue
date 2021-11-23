@@ -157,14 +157,6 @@
                         sortable : false ,   
                         width : '3%'
                     },
-                    // {
-                    //     label : '',
-                    //     field : 'beforePagarCotas',
-                    //     sortable : false ,   
-                    //     width : '3%'
-                    // },
-                    
-                    
                     {
                         label: 'Sócio',
                         field: 'nome',
@@ -180,13 +172,6 @@
                         sortable : false
                         
                     },
-                    // {
-                    //     label : 'Acção',
-                    //     field : 'action',
-                    //     sortable : false,
-                    //     html : true
-                    // }
-
                     {   
                         label : '',
                         field : 'moreinfo',

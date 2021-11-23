@@ -84,12 +84,9 @@
 
 <script>
     import { firebasedatabase } from '../firebaseDb'
-    // import 'vue-good-table/dist/vue-good-table.css'
-    // import { VueGoodTable } from 'vue-good-table';
-    // import VueHtmlToPaper from 'vue-html-to-paper'
-    //import VueHtml2pdf from 'vue-html2pdf'
 
     export default {
+        
         data() {
             return{
                 socios : []
@@ -159,10 +156,9 @@
 
 
             }
-        },
-
-
-        methods : {
+        }//DATA
+        
+        , methods : {
 
             getAllCotas(){
                 firebasedatabase
@@ -177,11 +173,7 @@
                                 )
 
                         })
-                        
-
                     })
-              
-
             }
 
             , preparDownload(){
@@ -200,8 +192,7 @@
                 .collection('/Socio')
                 .onSnapshot((snapshot) =>{
                     this.rows = [] ;
-                            
-                    
+                                           
 
                     snapshot.forEach((doc) =>{
                         
@@ -228,21 +219,6 @@
                         
                         if(haveCotasPorPagar) vCotasporpagar.sort();
                         
-                        // add default field on the objet
-                        // this.rows.push({
-                        //     socioN : doc.data().socioN,
-                        //     nome : doc.data().nome, 
-                        //     cotasPagas :  haveCotas?cotasSort.join('|'):'',
-                        //     cotasPorPagar : haveCotasPorPagar?vCotasporpagar.join('|'):''
-                        // })
-                        
-                        // if(this.selectedColumnsDownload.includes('morada')) this.rows.push({morada : doc.data().morada})
-                        // if(this.selectedColumnsDownload.includes('aniversario')) this.rows.push({aniversario : doc.data().aniversario})
-                        // if(this.selectedColumnsDownload.includes('nif')) this.rows.push({nif : doc.data().nif})
-                        // if(this.selectedColumnsDownload.includes('contacto')) this.rows.push({morada : doc.data().contacto})
-                        // if(this.selectedColumnsDownload.includes('criadoa')) this.rows.push({criadoa : doc.data().criadoa})
-
-
 
                         this.rows.push({
                             socioN : doc.data().socioN,
@@ -259,6 +235,8 @@
                     })
 
                     this.data = this.rows
+                    
+                    //SORT ARRAY
                     this.data.sort(function(a, b) {
                          if (a.socioN > b.socioN) {
                             return 1;
@@ -270,27 +248,21 @@
                         return 0;
                     })
 
-                    // console.log("ROWS")
-                    // console.log(JSON.stringify(this.rows));
                     setTimeout(() => { this.flagToDownloadFile = false }, 5000)
-                    //this.flagToDownloadFile = false
+                    
+                    
                 })
             }
 
 
             , setCotasAbertasByUser(creationYear){
-                let openYears  = []
-                
+                let openYears  = []                
                 this.cotasAbertas.forEach( (doc) =>{
-                    
                     if (doc >= creationYear){
                         openYears.push(doc);
                     }
-
                 });
-
                 return openYears;
-
             }
 
             , getCotasPorPagar(cotasAfterCreation, cotasPagas){
@@ -299,16 +271,15 @@
 
             }
 
-            , test (){
-                console.log('TEST TESTE');
-            }
-        },
 
-        components : {
+        }//METHODS
+        
+        , components : {
 
-        },
-
-        created() {
+        } // COMPONENTS
+        
+        
+        , created() {
             
             this.getAllCotas();          
                         
@@ -322,7 +293,7 @@
             
 
 
-        }
+        }//CREATE
 
 
 
