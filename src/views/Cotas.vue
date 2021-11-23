@@ -1,54 +1,44 @@
 <template>
-     
+
+    <!-- 
+        !!! This Page are note used !!! 
+            This logic was moved to  __> cotasList.vue
+    -->
+
     <b-container>
         <b-row>
-                <div class="col-sm-4 offset-sm-4">
-                    <b-card title="Nova Cota" > 
-                        
-                        <form @submit.prevent="onCotasFormSubmit"> 
-                            <div class="form-group">
-                                        <label for="socioNome">Cota</label>
-                                        <b-form-input 
-                                            v-model="cota.ano" 
-                                            placeholder="Ano" 
-                                            type="number"
-                                            required
-                                            :state="anoValidation"
-                                        ></b-form-input>
-                                        <b-form-invalid-feedback :state="anoValidation">
-                                            Ano Cota Obrigatorio
-                                        </b-form-invalid-feedback>
-                                        <b-form-valid-feedback>
+            <div class="col-sm-4 offset-sm-4">
+                <b-card title="Nova Cota" > 
+                    
+                    <form @submit.prevent="onCotasFormSubmit"> 
+                        <div class="form-group">
+                            <label for="socioNome">Cota</label>
+                            <b-form-input 
+                                v-model="cota.ano" 
+                                placeholder="Ano" 
+                                type="number"
+                                required
+                                :state="anoValidation"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="anoValidation">
+                                Ano Cota Obrigatorio
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
 
-                                        </b-form-valid-feedback>
-                                    
-                                    
-                            </div>
-                        </form>
-                    </b-card>
-                </div>
+                            </b-form-valid-feedback>
+                        </div>
+                    </form>
+
+                </b-card>
+            </div>
         </b-row>
-        </b-container>
-     <!-- <div>
-         COTAS
-        <form @submit.prevent="onCotasFormSubmit"> 
-            <div class="ano">
-                <input v-model="cota.ano" type="number" placeholder="Ano" class="input">
-            </div>          
-    
-            <button type="submit">Addicionar ano</button>
-
-        </form>
-
-
-    </div> 
-  -->
+    </b-container>
+     
 </template>
 
 <script>
     
     import {firebasedatabase } from '../firebaseDb'
-    // import { required , numeric } from 'vuelidate/lib/validators'
 
     export default {
         
@@ -60,17 +50,6 @@
                 }
             }
         },
-
-        // created : function(){
-        //     firebase.firestore().collection("/cotas")
-        // }
-
-        // methods : {
-        //     onCotasFormSubmit () {
-        //         alert(JSON.stringify(this.cota))
-        //     }
-        // }
-
 
         methods : {
             onCotasFormSubmit (event) {
@@ -88,12 +67,6 @@
             }
         }
         
-        // , validations : {
-        //     cota : {
-        //         ano : {required, numeric}
-        //     }
-        // }
-        
         , computed : {
                 
                 anoValidation(){
@@ -102,9 +75,6 @@
                 }
 
         }
-
-
-
 
      }
 </script>

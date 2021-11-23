@@ -1,5 +1,6 @@
 {
   "projects":{
-    "default" : "firebase_definition_geral_project_code"    
+    //"default" : "firebase_definition_geral_project_code"    
+    "default" : "vuetest-b6af0"    
   }
 }

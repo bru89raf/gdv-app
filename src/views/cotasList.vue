@@ -11,7 +11,7 @@
 
 
         <div v-if="!spinnerLoadingCotasTable">
-           <div>
+            <div>
                 <b-modal 
                     id="modalNovaCota"
                     v-model="modalShow"
@@ -108,8 +108,6 @@
 
         </div>
 
-
-        <!-- </div> -->
     </div>
 
 
