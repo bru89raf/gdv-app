@@ -16,9 +16,9 @@ What you can find on the application:
 
 *Note*: This is the first project, so, if you find some issues / probems or things to improve, please let me know.
 
-[DEMO Page](https://vuetest-b6af0.web.app/)
+Demo [Page](https://cli.vuejs.org/config/).
     User / Pwd : test@noemail.com / testnoemail
-
+   
 ```
 
 
