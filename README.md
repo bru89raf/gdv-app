@@ -1,5 +1,24 @@
 # gdv-app
 
+
+## Project Description
+```
+First project using VUE ( with bootstrap) and Firebase.
+
+The ideia was to create an CRUD application.
+
+What you can find on the application:
+    * Read Data
+    * Authentication ( Login to specific emails) 
+    * Insert 
+    * Update
+    * Delete
+
+*Note*: This is the first project, so, if you find some issues / probems or things to improve, please let me know.
+
+```
+
+
 ## Project setup
 ```
 npm install

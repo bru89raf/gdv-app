@@ -1,6 +1,5 @@
 {
   "projects":{
-    //"default" : "vuetest-b6af0"
-    "default" : "gdvsocios"
+    "default" : "firebase_definition_geral_project_code"    
   }
 }
