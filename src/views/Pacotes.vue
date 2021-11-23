@@ -116,10 +116,9 @@
                 , btnEnableSubmittForme : false
 
             }
-        },
-
-
-        methods: {
+        }//DATA
+        
+        , methods: {
 
             backtoPackList (){
                 this.$router.push('/pacotesList')
@@ -172,13 +171,11 @@
                 if (this.$v.$invalid) {
                     return;
                 }
-                
-                // alert("SUCCESS!! :-)\n\n" + JSON.stringify(this.pack));
 
             }
 
+        }//METHODS
 
-        }
 
         , computed :{
 
@@ -196,11 +193,9 @@
                     let checkPreco = this.pack.preco<1.00?true:false;
                 
                     return checkName === false && checkPreco === false ? false:true
-                }
+                }              
 
-                
-
-        }
+        }//COMPUTED
 
     }
 </script>
