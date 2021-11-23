@@ -12,7 +12,6 @@ import SocioListPrint from '../views/SocioListPrint.vue'
 
 import SocioEdit from '../views/SocioEdit.vue'
 
-// import SaveSocioCota from '../views/RegistaEditaCota.vue'
 import SaveSocioCota from '../views/RegisEditCotaOnSocio.vue'
 
 import Register from '../views/Register.vue'
@@ -75,12 +74,6 @@ const routes = [
     component: SaveSocioCota
     , meta : {requiresAuth : true}
   },
-  // {
-  //   path: '/saveSocioCota2/:id',
-  //   name: 'saveSocioCota2',
-  //   component: SaveSocioCota2
-  //   , meta : {requiresAuth : true}
-  // },
 
   {
     path: '/login',
