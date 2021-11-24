@@ -45,13 +45,6 @@
         </div>
 
 
-
-        <!-- Login feito 
-        <span v-if="loggedIn">Sim</span>
-        <span v-else>Não</span>
-        <div>
-            <button @click="signOut"> Logout</button>
-        </div> -->
     </div>
 </template>
 
