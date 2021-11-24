@@ -249,8 +249,6 @@
 
                 let formIsValid = packNameValid && packPrecoValid;
 
-                
-                
                 if (formIsValid){
                     // VERIFY IF IS A CREATE OR CREATE ( THIS CAN BE IMPROVE)
                     if(this.packModal_action  === 'new') { 
