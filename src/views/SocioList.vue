@@ -54,7 +54,11 @@
                             <b-icon icon="plus-circle-fill" ></b-icon> 
                     </b-button> 
                     
-                    <!-- Side Menu para Download ficheiro -->
+                    <!-- 
+                        Side Menu para Download ficheiro 
+
+                        This link will use the component >>> SideBarDownloadSocio.vue
+                    -->
                     <!-- <b-button pill variant="info" v-b-toggle.sidebarDownloadList>
                             <b-icon icon="download" ></b-icon> 
                     </b-button>  -->
@@ -70,9 +74,7 @@
                         </router-link>
 
                         <router-link :to="{name : 'saveSocioCota' , params : { id : props.row.key}}" class="btn btn-warning">
-                            <!-- <b-icon icon="cash-stack"></b-icon> -->
-                            <b-icon icon="cash"></b-icon>
-                            
+                            <b-icon icon="cash"></b-icon>                            
                         </router-link> 
 
                     </span>
@@ -143,9 +145,9 @@
         data() {
             
             return{
-                socios : []
+                // socios : []
 
-                , bAlertVariantSocioList : ''
+                bAlertVariantSocioList : ''
                 , bAlertMessageShowSocioList : ''
                 , dismissAlertSocioSecs : 3
                 , dismissAlertCountDownSuccessSocioList : 0
@@ -161,11 +163,6 @@
                         label: 'Sócio',
                         field: 'nome',
                     },
-                    // {
-                    //     label: 'Morada',
-                    //     field: 'morada',   
-                    //     sortable : false                 
-                    // },
                     {   
                         label : 'Contacto',
                         field : 'contacto',
@@ -199,7 +196,7 @@
 
                 if( window.confirm("APAGAR Sócio?") ){
 
-                    if( window.confirm("Quer prosseguir com a remoção?\n(está operação não será possivel de reverter)") ) {
+                    if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
 
                         firebasedatabase
                             .collection('/Socio')
@@ -252,8 +249,8 @@
                             nif : doc.data().nif,
                             contacto : doc.data().contacto,
                             email : doc.data().email,
-                            criadoa : doc.data().criadoa,
-                            action : '<button @click="editRow(doc.id)">Edit</button>',
+                            criadoa : doc.data().criadoa
+                            
                             
                         })
                     })

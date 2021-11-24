@@ -3,10 +3,7 @@
         <b-container>
             
             <b-row>
-                <!-- <div class="col-sm-10 offset-sm-2"> -->
-                    
-
-                    <b-alert
+                <b-alert
                         id="b-alert-novoSocioSucesso"
                         :show="dismissAlertCountDownSuccessSocio"
                         dismissible
@@ -140,6 +137,7 @@
                                         v-model="socio.nif" 
                                         type="number"
                                         placeholder="NIF"                                        
+                                        :state="nifValidation"
                                     ></b-form-input> 
                                     <b-form-invalid-feedback :state="nifValidation">
                                         <span v-if="socio.nif.length!=9">NIF errado. </span> 
@@ -148,8 +146,6 @@
                                     <b-form-valid-feedback>
                                     </b-form-valid-feedback>
                                 </div>
-
-
 
                                 
                                 <div class="form-group">
@@ -177,7 +173,6 @@
 
                                 <div class="form-group">                                    
                                     <b-button pill variant="success" type="submit">
-                                        <!-- Atualizar Pack -->
                                         <b-icon icon="plus" ></b-icon>
                                     </b-button>
 
@@ -193,8 +188,6 @@
                     
                         </b-card>
 
-                <!-- </div> -->
-
             </b-row>
 
         </b-container>
@@ -204,11 +197,6 @@
 <script>
 
     import { firebasedatabase } from '../firebaseDb'
-    // import { required , numeric ,minLength , helpers} from 'vuelidate/lib/validators'
-    //import { required , numeric ,minLength } from 'vuelidate/lib/validators'
-    // import { BFormSelect } from 'bootstrap-vue'
-
-
 
     export default {
                 
@@ -229,7 +217,7 @@
 
                 statusInsertNextSocio : false,
 
-                //no Pack  ->  esta a null por causa de a opção by default do select
+                // pack == null -> to show the option "Escolher Opção.."
                 socio : {
                     socioN : 0
                     , nome: ''
@@ -268,35 +256,24 @@
         computed :{
 
             socioNValidation(){
-                // return this.listSocioN.includes(this.socio.socioN)
                 return this.checkSocioNValidation();
             }
 
             , nameValidation(){
-                // return this.socio.nome.length==0?null:this.socio.nome.length > 3 ;
                 return this.checkNameValidation();
             }
             
             , validateMorada(){
-                // return this.socio.morada.length==0?null:this.socio.morada.length > 4     
                 return this.checkMoradaValidation();
             }
             
             , contactoValidation(){
-                // return this.socio.contacto.length==0?null:this.socio.contacto.length == 9     
                 return this.checkContactoValidation()
             }
 
             , nifValidation(){
-                // return this.socio.nif.length==0?null:this.socio.nif.length==9&&this.validateNIF(this.socio.nif)
                 return this.checkNifValidation();
             }
-
-            // , packValidation(){
-            //     // return this.socio.pack.length != null
-            //     return this.checkPackValidation();
-            // }
-
 
 
         },
@@ -306,19 +283,19 @@
         methods : {
             
             checkSocioNValidation(){
-            // let checkCode =  this.listSocioN.indexOf(this.socio.socioN) 
-            // let checkCode =  this.listSocioN.includes(this.socio.socioN) 
+                // let checkCode =  this.listSocioN.indexOf(this.socio.socioN) 
+                // let checkCode =  this.listSocioN.includes(this.socio.socioN) 
 
-            let convertArray =  this.listSocioN.join();
-            let checkCode = !convertArray.includes(this.socio.socioN)
+                let convertArray =  this.listSocioN.join();
+                let checkCode = !convertArray.includes(this.socio.socioN)
 
-            this.formIsValid.vsocion = checkCode;
+                this.formIsValid.vsocion = checkCode;
 
-            // console.log(this.listSocioN);
-            // console.log(this.socio.socioN);
-            // console.log('CHECK CODE ' + checkCode);
+                // console.log(this.listSocioN);
+                // console.log(this.socio.socioN);
+                // console.log('CHECK CODE ' + checkCode);
 
-            return checkCode
+                return checkCode
 
             }
 
@@ -347,16 +324,6 @@
                 if(vNIF!=null) {this.formIsValid.vnif = vNIF} else {this.formIsValid.vnif = true}
                 return vNIF;
             }
-
-            // , checkPackValidation(){
-            //     let vPack = this.socio.pack.length > 0?true:false; 
-            //     this.formIsValid.vpack = vPack;
-            //     return vPack;
-            // }
-
-
-
-
 
 
             , backtoSocioList(){
@@ -402,6 +369,7 @@
                         this.socio.nome = '';
                         this.socio.morada = '';
                         this.socio.contacto = '';
+                        this.socio.aniversario = '';
                         this.socio.email = '';
                         this.socio.nif = '';
                         this.socio.pack = null;
@@ -575,14 +543,6 @@
 
 
             }
-
-
-
-
-
-
-
-
 
         } //METHODS
         

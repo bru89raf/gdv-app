@@ -2,14 +2,8 @@
       
    <b-container>
             
-            <!-- </b-row> <div class="row"> -->
-            <b-row>
-                <div class="col-sm-4 offset-sm-4">
-                
-
-                
-                <b-card title="Edita Sócio" sub-title="">
-                    
+        <b-row>
+            <b-card title="Edita Sócio">
 
                 <form @submit.prevent="submitEditSocio"> 
 
@@ -28,8 +22,7 @@
                                 Numero de Socio já esta em uso.
                             </b-form-invalid-feedback>
                         </b-input-group>
-                    </div>
-                        
+                    </div>                        
                         
                     <div class="form-group">
                         <b-form-input 
@@ -45,7 +38,6 @@
                         <b-form-valid-feedback>
                         </b-form-valid-feedback>
                     </div> 
-
                         
                     <div class="form-group">
                         <b-form-input 
@@ -61,7 +53,6 @@
                         <b-form-valid-feedback>
                         </b-form-valid-feedback>
                     </div>
-
 
                     <div class="form-group">
                         <b-form-input 
@@ -101,8 +92,7 @@
                         </b-form-invalid-feedback>
                         <b-form-valid-feedback>
                         </b-form-valid-feedback>
-                    </div>
-                            
+                    </div>                            
 
                     <div class="form-group">
                         <b-form-select 
@@ -119,29 +109,24 @@
                         </b-form-select>                                
                     </div>
 
+                    <div class="form-group">                                    
+                        
+                        <b-button pill variant="success" type="submit">
+                            <b-icon icon="arrow-repeat" ></b-icon>
+                        </b-button>
 
 
-                        <div class="form-group">                                    
-                            
-                            <b-button pill variant="success" type="submit">
-                                <b-icon icon="arrow-repeat" ></b-icon>
-                            </b-button>
+                        <b-button pill variant="outline-primary" @click="backToSocioList()" icon="arrow-up">
+                            <b-icon icon="arrow-left" aria-hidden="true"></b-icon>     
+                        </b-button>                             
 
 
-                            <b-button pill variant="outline-primary" @click="backToSocioList()" icon="arrow-up">
-                                <b-icon icon="arrow-left" aria-hidden="true"></b-icon>     
-                            </b-button>                             
-
-
-                        </div>
+                    </div>
 
                 </form>
-
             
-                </b-card>
-            </div>
-    
-            </b-row>
+            </b-card>                
+        </b-row>
    </b-container>
 </template>
 
@@ -229,11 +214,6 @@
                             })
                     }
                 }
-
-
-
-
-
             }
 
 
