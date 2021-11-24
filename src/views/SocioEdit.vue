@@ -172,15 +172,7 @@
                     , vnif : true
                     , vpack : false
                 },
-                // , formIsValid : {
-                //     vsocion : false
-                //     , vname : false
-                //     , vmorada : false
-                //     , vcontacto : false
-                //     , vemail : true
-                //     , vnif : true
-                //     , vpack : false
-                // },
+    
                  
             } 
 
@@ -211,7 +203,7 @@
             }
 
             , submitEditSocio() {
-                // alert("SUCCESS!! :-)\n\n" + JSON.stringify(this.socio));
+      
                 
                 let updateValidForm = this.formIsValid.vsocion
                                     &&this.formIsValid.vname 
@@ -219,14 +211,7 @@
                                     && this.formIsValid.vcontacto 
                                     && this.formIsValid.vnif;
 
-                
-                // console.log('vsocion %s , vname %s, vmorada %s, vcontacto %s , vnif %s' , this.formIsValid.vsocion
-                //                     ,  this.formIsValid.vname 
-                //                     ,  this.formIsValid.vmorada 
-                //                     ,  this.formIsValid.vcontacto 
-                //                     ,  this.formIsValid.vnif);
-
-                // console.log('UPDATE VALID FORM : ' + updateValidForm);                                    
+                                  
 
                 if (updateValidForm) {
                     if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){
@@ -288,10 +273,8 @@
 
             }
             , checkNameUpdateValidation(){
-                // var vName =  this.socio.nome.length===0?false:this.socio.nome.length > 3 ;
-                // if(vName!=null) this.formIsValid.vname = vName;
-                // console.log('Nome length: ' + this.socio.nome +  " || " + this.socio.nome.length);
-                // var vName =  this.socio.nome.length>=4?true:false ;
+                
+                
                 if (undefined !== this.socio.nome) {
 
                     var vName ;
@@ -357,11 +340,7 @@
         
         , created() {
 
-            // setTimeout(() => {
-                
-          
-
-
+            
             let dbRef =  firebasedatabase
                 .collection('/Socio')
                 .doc(this.$route.params.id);
