@@ -25,88 +25,100 @@
                     </div>                        
                         
                     <div class="form-group">
-                        <b-form-input 
-                            v-model="socio.nome" 
-                            placeholder="Nome" 
-                            type="text"
-                            required
-                            :state="nameValidationUpdate"
-                        ></b-form-input>
-                        <b-form-invalid-feedback :state="nameValidationUpdate">
-                            Nome Obrigatorio
-                        </b-form-invalid-feedback>
-                        <b-form-valid-feedback>
-                        </b-form-valid-feedback>
+                        
+                        <b-input-group prepend="Nome">
+                            <b-form-input 
+                                v-model="socio.nome" 
+                                placeholder="Nome" 
+                                type="text"
+                                required
+                                :state="nameValidationUpdate"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="nameValidationUpdate">
+                                Nome Obrigatorio
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
                     </div> 
                         
                     <div class="form-group">
-                        <b-form-input 
-                            v-model="socio.morada" 
-                            type="text"
-                            placeholder="Morada" 
-                            required
-                            :state="validateMorada"
-                        ></b-form-input>
-                        <b-form-invalid-feedback :state="validateMorada">
-                            Morada Obrigatorio
-                        </b-form-invalid-feedback>
-                        <b-form-valid-feedback>
-                        </b-form-valid-feedback>
+                        <b-input-group prepend="Morada">
+                            <b-form-input 
+                                v-model="socio.morada" 
+                                type="text"
+                                placeholder="Morada" 
+                                required
+                                :state="validateMorada"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="validateMorada">
+                                Morada Obrigatorio
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
                     </div>
 
                     <div class="form-group">
-                        <b-form-input 
-                            v-model="socio.contacto" 
-                            type="number"
-                            placeholder="Contacto" 
-                            required
-                            :state="contactoValidation"
-                        ></b-form-input>
-                        <b-form-invalid-feedback :state="contactoValidation">
-                            <span v-if="undefined !==socio.contacto && socio.contacto.length>9">Tamanho do contacto errado</span>
-                            <span v-else>Contacto Obrigatorio</span>                                        
-                        </b-form-invalid-feedback>
-                        <b-form-valid-feedback>
-                        </b-form-valid-feedback>
-                        
+                        <b-input-group prepend="Contacto">
+                            <b-form-input 
+                                v-model="socio.contacto" 
+                                type="number"
+                                placeholder="Contacto" 
+                                required
+                                :state="contactoValidation"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="contactoValidation">
+                                <span v-if="undefined !==socio.contacto && socio.contacto.length>9">Tamanho do contacto errado</span>
+                                <span v-else>Contacto Obrigatorio</span>                                        
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
                     </div>
 
                     <div class="form-group">
-                        <b-form-input 
-                            v-model="socio.email" 
-                            type="email"
-                            placeholder="email" 
-                        ></b-form-input>
+                        <b-input-group prepend="Email">
+                            <b-form-input 
+                                v-model="socio.email" 
+                                type="email"
+                                placeholder="email" 
+                            ></b-form-input>
+                        </b-input-group>
                     </div>
                             
                     <div class="form-group">
-                        <b-form-input 
-                            v-model="socio.nif" 
-                            type="number"
-                            placeholder="NIF"                                     
-                            :state="nifValidation"
-                        ></b-form-input> 
-                        <b-form-invalid-feedback :state="nifValidation">
-                            <span v-if="undefined!==socio.nif && socio.nif.length!=9">NIF errado. </span> 
-                            <span v-else>Obrigatorio</span>
-                        </b-form-invalid-feedback>
-                        <b-form-valid-feedback>
-                        </b-form-valid-feedback>
+                        <b-input-group prepend="NIF">
+                            <b-form-input 
+                                v-model="socio.nif" 
+                                type="number"
+                                placeholder="NIF"                                     
+                                :state="nifValidation"
+                            ></b-form-input> 
+                            <b-form-invalid-feedback :state="nifValidation">
+                                <span v-if="undefined!==socio.nif && socio.nif.length!=9">NIF errado. </span> 
+                                <span v-else>Obrigatorio</span>
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
                     </div>                            
 
                     <div class="form-group">
-                        <b-form-select 
-                            v-model="socio.pack" 
-                            :options="packList"
-                            value-field="value"
-                            text-field="text"
-                            id="socioPack"  
-                            placeholder="Escolher Pack"
-                            name="socioPack" 
-                            required
-                            :state="packValidation"
-                            >
-                        </b-form-select>                                
+                        <b-input-group prepend="Pack ">
+                            <b-form-select 
+                                v-model="socio.pack" 
+                                :options="packList"
+                                value-field="value"
+                                text-field="text"
+                                id="socioPack"  
+                                placeholder="Escolher Pack"
+                                name="socioPack" 
+                                required
+                                :state="packValidation"
+                                >
+                            </b-form-select>     
+                        </b-input-group>                           
                     </div>
 
                     <div class="form-group">                                    
