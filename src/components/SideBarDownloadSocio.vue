@@ -1,4 +1,13 @@
 <template>
+    
+    <!-- 
+        
+        Not in use for now
+        Maybe we will used this on the future updates.
+
+     -->
+    
+    
     <div>
         <b-sidebar id="sidebarDownloadList" title="Socio Extract" shadow>
             <div class="px-3 py-2">

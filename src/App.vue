@@ -1,27 +1,10 @@
 <template>
   <div id="app">
 
-    <!-- adicionar novo componente no layout -->
+    <!-- ADD COMPONENT TOP HEADER ON THE LAYOUT-->
     <top-header></top-header>
-
-
        
-<div id="nav"></div>
-
-<!-- 
-    <div id="nav">
-      <router-link to="/login">Login</router-link> |
-      
-      <router-link to="/register">Register</router-link> |
-
-      <router-link to="/SocioList">Lista Sócio</router-link> |
-      
-      <router-link to="/cotasList">Lista Cotas</router-link> |
-      
-      <router-link to="/pacotesList">Lista Packs</router-link> |
-      
-      <router-link to="/importexportdata">Import/Export</router-link> 
-    </div> -->
+    <div id="nav"></div>
     
     <router-view/>
   
