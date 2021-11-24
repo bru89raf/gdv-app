@@ -70,6 +70,31 @@
                         </b-form-valid-feedback>
                         
                     </div>
+                    
+                    <div class="form-group">
+                            <b-input-group class="mb-3">
+                                <b-form-input
+                                    id="example-input"
+                                    v-model="socio.aniversario"
+                                    type="text"
+                                    placeholder="Aniversário"
+                                    autocomplete="off"
+                                    title="Formato - AAAA-MM-DD"
+                                ></b-form-input>
+                                <b-input-group-append>
+                                    <b-form-datepicker
+                                    v-model="socio.aniversario"
+                                    button-only
+                                    right
+                                    aria-controls="example-input"
+                                    ></b-form-datepicker>
+                                    
+                                </b-input-group-append>
+                            </b-input-group>
+                    </div>
+
+
+
 
                     <div class="form-group">
                         <b-form-input 

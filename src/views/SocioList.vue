@@ -257,8 +257,7 @@
 
                     this.spinnerLoadingSociosTable = false;
 
-                });
-           
+                });           
            
         }//CREATED
 
