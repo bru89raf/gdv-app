@@ -176,9 +176,7 @@
                         width : '2%'
                     },
 
-                ]
-                
-                
+                ]                 
                 , rows : []
                 , spinnerLoadingSociosTable  : true
 
@@ -215,7 +213,6 @@
 
                 }
             }
-
 
             , countDownChangedAlertSocioList(dismissCountDownSuccess){
                 this.dismissAlertCountDownSuccessSocioList = dismissCountDownSuccess
