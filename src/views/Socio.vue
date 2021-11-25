@@ -13,7 +13,7 @@
                     >
                         <p>{{ bAlertMessageShow }}</p>
 
-                    </b-alert>
+                </b-alert>
 
                     <b-card title="Novo Sócio" >
                         

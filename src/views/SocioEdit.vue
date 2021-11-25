@@ -8,7 +8,7 @@
                 <form @submit.prevent="submitEditSocio"> 
 
                     <div class="form-group">
-                        <b-input-group prepend="Numero Sócio">
+                        <b-input-group size="sm"  prepend="Numero Sócio">
                             <b-form-input
                                 type="number" 
                                 v-model="socio.socioN" 
@@ -26,7 +26,7 @@
                         
                     <div class="form-group">
                         
-                        <b-input-group prepend="Nome">
+                        <b-input-group size="sm"  prepend="Nome">
                             <b-form-input 
                                 v-model="socio.nome" 
                                 placeholder="Nome" 
@@ -43,7 +43,7 @@
                     </div> 
                         
                     <div class="form-group">
-                        <b-input-group prepend="Morada">
+                        <b-input-group size="sm"  prepend="Morada">
                             <b-form-input 
                                 v-model="socio.morada" 
                                 type="text"
@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="form-group">
-                        <b-input-group prepend="Contacto">
+                        <b-input-group size="sm"  prepend="Contacto">
                             <b-form-input 
                                 v-model="socio.contacto" 
                                 type="number"
@@ -78,7 +78,7 @@
                     </div>
                     
                     <div class="form-group">
-                            <b-input-group class="mb-3">
+                            <b-input-group size="sm"   prepend="Anivers.">
                                 <b-form-input
                                     id="example-input"
                                     v-model="socio.aniversario"
@@ -86,6 +86,7 @@
                                     placeholder="Aniversário"
                                     autocomplete="off"
                                     title="Formato - AAAA-MM-DD"
+                                    size="sm"
                                 ></b-form-input>
                                 <b-input-group-append>
                                     <b-form-datepicker
@@ -93,6 +94,7 @@
                                     button-only
                                     right
                                     aria-controls="example-input"
+                                    size="sm"
                                     ></b-form-datepicker>
                                     
                                 </b-input-group-append>
@@ -103,7 +105,7 @@
 
 
                     <div class="form-group">
-                        <b-input-group prepend="Email">
+                        <b-input-group size="sm"  prepend="Email">
                             <b-form-input 
                                 v-model="socio.email" 
                                 type="email"
@@ -113,7 +115,7 @@
                     </div>
                             
                     <div class="form-group">
-                        <b-input-group prepend="NIF">
+                        <b-input-group size="sm"  prepend="NIF">
                             <b-form-input 
                                 v-model="socio.nif" 
                                 type="number"
@@ -130,7 +132,7 @@
                     </div>                            
 
                     <div class="form-group">
-                        <b-input-group prepend="Pack ">
+                        <b-input-group size="sm"  prepend="Pack ">
                             <b-form-select 
                                 v-model="socio.pack" 
                                 :options="packList"
