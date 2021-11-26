@@ -53,6 +53,11 @@
                     <b-button pill variant="success" @click.prevent="GoToNovoSocio()">
                             <b-icon icon="plus-circle-fill" ></b-icon> 
                     </b-button> 
+
+
+                     <b-button pill variant="success" @click.prevent="modalSocioOpen_cickVueTable()">
+                            <b-icon icon="plus-circle" ></b-icon> 
+                    </b-button> 
                     
                     <!-- 
                         Side Menu para Download ficheiro 
@@ -69,9 +74,14 @@
                     
                     <span v-if="props.column.field == 'beforeEditSocio'">
 
-                        <router-link :to="{name : 'SocioEdit' , params : { id : props.row.key}}" class="btn btn-primary">
+                        <!-- <router-link :to="{name : 'SocioEdit' , params : { id : props.row.key}}" class="btn btn-primary">
                             <b-icon icon="pencil"></b-icon>
-                        </router-link>
+                        </router-link> -->
+                        
+                        <b-button @click.prevent="editSocio()" variant="primary" class="btn">
+                            <b-icon icon="pencil"></b-icon>  
+                        </b-button>
+
 
                         <router-link :to="{name : 'saveSocioCota' , params : { id : props.row.key}}" class="btn btn-warning">
                             <b-icon icon="cash"></b-icon>                            
@@ -118,7 +128,59 @@
 
                 </template>
 
-            </vue-good-table>        
+            </vue-good-table>       
+            
+
+            <!-- MODAL FOR CREATE OR UPDATE SOCIO -->
+            <b-modal 
+                id="modal-Socio" 
+                :title="bModalTitle_Socio" 
+                button-size="sm"
+                hide-footer
+                hide-header-close
+            >
+            
+                <form @submit.prevent="onSocioModelFormSubmit" >
+                    
+                    <!-- <div class="form-group">
+                        <b-input-group size="sm"  prepend="Numero Sócio">
+                            <b-form-input
+                                type="number" 
+                                v-model="socioModal.socioN" 
+                                id="socioNumero" 
+                                name="socioNumero" 
+                                class="form-control"                                         
+                                :state="socioNUpdateValidation"
+                                min="1"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="socioNUpdateValidation">
+                                Numero de Socio já esta em uso.
+                            </b-form-invalid-feedback>
+                        </b-input-group>
+                    </div>       -->
+                    
+                    <div class="form-group">                        
+                        <b-input-group size="sm"  prepend="Nome">
+                            <b-form-input 
+                                v-model="socioModal.nome" 
+                                placeholder="Nome" 
+                                type="text"
+                                required
+                                :state="nameValidatioModal"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="nameValidatioModal">
+                                Nome Obrigatorio
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
+                    </div> 
+
+                </form>
+            
+            </b-modal>
+
+
         </div>
 
 
@@ -145,8 +207,7 @@
         data() {
             
             return{
-                // socios : []
-
+                
                 bAlertVariantSocioList : ''
                 , bAlertMessageShowSocioList : ''
                 , dismissAlertSocioSecs : 3
@@ -179,6 +240,34 @@
                 ]                 
                 , rows : []
                 , spinnerLoadingSociosTable  : true
+
+
+
+                // MODAL
+                , socioModal_action : 'new'
+                , socioKey_edit : ''
+                , socioModal : {
+                    aniversario : ''
+                    , contacto : ''
+                    , cotas : ''
+                    , criadoa : ''
+                    , email : ''
+                    , morada : ''
+                    , nif : ''
+                    , nome  : ''
+                    , pack : ''
+                    , socioN : '' 
+                }
+
+                , formIsValid : {
+                    vsocion : false
+                    , vname : false
+                    , vmorada : false
+                    , vcontacto : false
+                    , vemail : true
+                    , vnif : true
+                    , vpack : false
+                },
 
             }
         }//DATA
@@ -222,9 +311,63 @@
                 this.dismissAlertCountDownSuccessSocioList = this.dismissAlertSocioSecs
             }
 
+            
+
+            , modalSocioOpen_cickVueTable(){
+                 this.clean_SocioModal();
+                this.$bvModal.show('modal-Socio');
+            }
+
+
+            , clean_SocioModal(){
+                this.socioModal_action = 'new'
+                this.socioKey_edit = ''
+                               
+                this.socioModal.aniversario = ''
+                this.socioModal.contacto = ''
+                this.socioModal.cotas = ''
+                this.socioModal.criadoa = ''
+                this.socioModal.email = ''
+                this.socioModal.morada =''
+                this.socioModal.nif = ''
+                this.socioModal.nome  = ''
+                this.socioModal.pack = ''
+                this.socioModal.socioN = ''
+            }
+
+
+            , checkNameModalValidation(){
+                if (undefined !== this.socioModal.nome) {
+
+                    var vName ;
+                    if(this.socioModal.nome.length>=4) {
+                        vName = true;
+                        this.formIsValid.vname = true;
+                    }else{
+                        vName = false;
+                        this.formIsValid.vname = false;
+                    }
+                    return vName;
+                }
+            }
+
 
 
         }//METHODS
+
+        , computed : {
+            
+            bModalTitle_Socio(){
+                return this.socioKey_edit.length!=0?'Editar Socio':'Novo Socio';
+            }
+
+
+            , nameValidatioModal(){
+                return this.checkNameModalValidation();
+            }
+
+
+        }
         
         , components : {
             VueGoodTable
