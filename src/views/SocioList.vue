@@ -73,14 +73,21 @@
                 <template slot="table-row" slot-scope="props">                   
                     
                     <span v-if="props.column.field == 'beforeEditSocio'">
-
-                        <!-- <router-link :to="{name : 'SocioEdit' , params : { id : props.row.key}}" class="btn btn-primary">
-                            <b-icon icon="pencil"></b-icon>
-                        </router-link> -->
-                        
-                        <b-button @click.prevent="editSocio()" variant="primary" class="btn">
+  
+                        <!-- <b-button @click.prevent="editSocio()" variant="primary" class="btn">
                             <b-icon icon="pencil"></b-icon>  
-                        </b-button>
+                        </b-button> -->
+                        <b-button  @click.prevent="editSocio(props.row.key,
+                                                                 props.row.socioN, 
+                                                                 props.row.nome, 
+                                                                 props.row.morada, 
+                                                                 props.row.nif,
+                                                                 props.row.contacto,
+                                                                 props.row.email,
+                                                                 props.row.aniversario,
+                                                                 props.row.pack )" variant="primary" class="btn">
+                            <b-icon icon="pencil"></b-icon>  
+                        </b-button> 
 
 
                         <router-link :to="{name : 'saveSocioCota' , params : { id : props.row.key}}" class="btn btn-warning">
@@ -140,24 +147,42 @@
                 hide-header-close
             >
             
+                 <b-alert
+                    id="b-alert-SocioModal"
+                    :show="dismissAlertCountDownSuccessSocioList_modal"
+                    dismissible
+                    :variant="bAlertVariantSocioList_modal"
+                    @dismissed="dismissAlertCountDownSuccessSocioList_modal=0"
+                    @dismiss-count-down="countDownChangedAlertSocioList_modal"
+                >
+                    <p>{{ bAlertMessageShowSocioList_modal }}</p>
+
+                 </b-alert>
+
                 <form @submit.prevent="onSocioModelFormSubmit" >
                     
-                    <!-- <div class="form-group">
-                        <b-input-group size="sm"  prepend="Numero Sócio">
+                    <div class="form-group">
+
+                        <b-input-group size="sm"  prepend="Numero Sócio (possivel) ">
+                            <b-spinner size="sm" v-if="loadingSpinnerSocioNumber" ></b-spinner>
                             <b-form-input
                                 type="number" 
                                 v-model="socioModal.socioN" 
                                 id="socioNumero" 
                                 name="socioNumero" 
-                                class="form-control"                                         
-                                :state="socioNUpdateValidation"
+                                class="form-control" 
+                                v-if="!loadingSpinnerSocioNumber"
+                                :state="socioNValidationModal"
                                 min="1"
                             ></b-form-input>
-                            <b-form-invalid-feedback :state="socioNUpdateValidation">
-                                Numero de Socio já esta em uso.
+                            <b-form-invalid-feedback :state="socioNValidationModal">
+                                <span v-if="!loadingSpinnerSocioNumber">Numero de Socio já esta em uso.</span> 
                             </b-form-invalid-feedback>
+
+
                         </b-input-group>
-                    </div>       -->
+
+                    </div>      
                     
                     <div class="form-group">                        
                         <b-input-group size="sm"  prepend="Nome">
@@ -166,9 +191,9 @@
                                 placeholder="Nome" 
                                 type="text"
                                 required
-                                :state="nameValidatioModal"
+                                :state="nameValidatioSocioModal"
                             ></b-form-input>
-                            <b-form-invalid-feedback :state="nameValidatioModal">
+                            <b-form-invalid-feedback :state="nameValidatioSocioModal">
                                 Nome Obrigatorio
                             </b-form-invalid-feedback>
                             <b-form-valid-feedback>
@@ -176,7 +201,147 @@
                         </b-input-group>
                     </div> 
 
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Morada">
+                            <b-form-input 
+                                v-model="socioModal.morada" 
+                                type="text"
+                                placeholder="Morada" 
+                                required
+                                :state="moradaValidationSocioModal"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="moradaValidationSocioModal">
+                                Morada Obrigatorio
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
+                    </div>
+
+
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Contacto">
+                            <b-form-input 
+                                v-model="socioModal.contacto" 
+                                type="number"
+                                placeholder="Contacto" 
+                                required
+                                :state="contactoValidationSocioModal"
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="contactoValidationSocioModal">
+                                <span v-if="undefined !==socioModal.contacto && socioModal.length>9">Tamanho do contacto errado</span>
+                                <span v-else>Contacto Obrigatorio</span>                                        
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
+                    </div>
+
+                    <div class="form-group">
+                        <b-input-group size="sm"   prepend="Anivers.">
+                            <b-form-input
+                                id="example-input"
+                                v-model="socioModal.aniversario"
+                                type="text"
+                                placeholder="Aniversário"
+                                autocomplete="off"
+                                title="Formato - AAAA-MM-DD"
+                                size="sm"
+                            ></b-form-input>
+                            <b-input-group-append>
+                                <b-form-datepicker
+                                v-model="socioModal.aniversario"
+                                button-only
+                                right
+                                aria-controls="example-input"
+                                size="sm"
+                                ></b-form-datepicker>
+                                
+                            </b-input-group-append>
+                        </b-input-group>
+                    </div>
+
+
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Email">
+                            <b-form-input 
+                                v-model="socioModal.email" 
+                                type="email"
+                                placeholder="email" 
+                            ></b-form-input>
+                        </b-input-group>
+                    </div>
+
+
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="NIF">
+                            <b-form-input 
+                                v-model="socioModal.nif" 
+                                type="number"
+                                placeholder="NIF"                                     
+                                :state="nifValidationSocioModal"
+                            ></b-form-input> 
+                            <b-form-invalid-feedback :state="nifValidationSocioModal">
+                                <span v-if="undefined!==socioModal.nif && socioModal.nif.length!=9">NIF errado. </span> 
+                                <span v-else>Obrigatorio</span>
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback>
+                            </b-form-valid-feedback>
+                        </b-input-group>
+                    </div>  
+
+
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Pack ">
+                            <b-form-select 
+                                v-model="socioModal.pack" 
+                                :options="packList_Socio"
+                                value-field="value"
+                                text-field="text"
+                                id="socioPack"  
+                                placeholder="Escolher Pack"
+                                name="socioPack" 
+                                required
+                                :state="packValidationSocioModal"
+                                >
+                            </b-form-select>     
+                                <!-- :state="packValidation" -->
+                        </b-input-group>                           
+                    </div>
+
+                      <div class="form-group">    
+                                    
+                        <b-form-checkbox 
+                            v-if="socioKey_edit.length==0"
+                            v-model="statusInsertNextSocio" 
+                            name="check-button" 
+                            switch
+                            >
+                            Inserir de seguida outro Sócio.
+                        </b-form-checkbox>
+
+                    </div>
+
+
+
+                        <b-button 
+                            :variant="bModalButtonVariant_Socio" 
+                            class="mt-1" 
+                            block 
+                            type="submit"
+                        >    
+                            <span v-if="socioModal_action=='update'">Atualizar</span>
+                            <span v-else>Novo</span>
+                        </b-button>
+                        
+                        
+                        <b-button class="mt-1" block @click="modalSocioClose">Fechar</b-button>
+                       
+
+
                 </form>
+
+
             
             </b-modal>
 
@@ -249,14 +414,14 @@
                 , socioModal : {
                     aniversario : ''
                     , contacto : ''
-                    , cotas : ''
                     , criadoa : ''
                     , email : ''
                     , morada : ''
                     , nif : ''
                     , nome  : ''
-                    , pack : ''
+                    , pack : null
                     , socioN : '' 
+
                 }
 
                 , formIsValid : {
@@ -267,12 +432,69 @@
                     , vemail : true
                     , vnif : true
                     , vpack : false
-                },
+                }
+                
+                
+                , packList_Socio : []
+                , loadingSpinnerSocioNumber : true
+
+                , listOfSocioN : []
+                , originalSocioN : ''
+                , statusInsertNextSocio : false
+
+                
+                , bAlertVariantSocioList_modal : ''
+                , dismissAlertCountDownSuccessSocioList_modal : 0
+                , bAlertMessageShowSocioList_modal : ''
+                , dismissAlertSocioSecs_modal : 3
+                
+                // ---modal
+
+
 
             }
         }//DATA
         
+        , computed : {
+            
+            bModalTitle_Socio(){
+                return this.socioKey_edit.length!=0?'Editar Socio':'Novo Socio';
+            }
+
+            , bModalButtonVariant_Socio() {
+                return this.socioModal_action==='new'?'success':'primary'
+            }
+
+
+            , socioNValidationModal(){
+                return this.checkSocioNSocioModalValidation();
+            }
+
+            , nameValidatioSocioModal(){
+                return this.checkNameSocioModalValidation();
+            }
+
+            , moradaValidationSocioModal(){
+                return this.checkMoradaSocioModalValidation();
+            }
+
+            , contactoValidationSocioModal(){
+                return this.checkContactoSocioModalValidation();
+            }
+
+            , nifValidationSocioModal() {
+                return this.checkNIFSocioModalValidation();
+            }
+
+            , packValidationSocioModal(){
+                return this.checkPackSocioModalValidation();
+            }
+
         
+
+        }//COMPUTED
+
+
         , methods : {
 
             GoToNovoSocio(){
@@ -290,7 +512,7 @@
                             .doc(socioKey)
                             .delete()
                             .then(() => {
-                                this.bAlertVariantSocioList = 'success'
+                                this.bAlertVariantSocioList = 'danger'
                                 this.bAlertMessageShowSocioList = 'Sócio removido com sucesso!'
                                 this.showBAlertSocioList();
                                 
@@ -311,63 +533,312 @@
                 this.dismissAlertCountDownSuccessSocioList = this.dismissAlertSocioSecs
             }
 
+            // ON MODAL
+            , countDownChangedAlertSocioList_modal(dismissCountDownSuccess){
+                this.dismissAlertCountDownSuccessSocioList_modal = dismissCountDownSuccess
+            }
+
+            , showBAlertSocioList_modal(){
+                this.dismissAlertCountDownSuccessSocioList_modal = this.dismissAlertSocioSecs
+            }
+
+
+
             
+
+            , editSocio(vKey, vSocion, vNome, vMorada, vNIF, vContacto, vEmail, vAniv, vPack){
+                
+                this.socioModal_action = 'update'
+                this.socioKey_edit = vKey;
+                this.originalSocioN = vSocion;
+                this.loadingSpinnerSocioNumber = false;
+
+                this.socioModal.socioN = vSocion
+                this.socioModal.nome = vNome
+                this.socioModal.morada = vMorada
+                this.socioModal.nif = vNIF
+                this.socioModal.contacto = vContacto
+                this.socioModal.email = vEmail
+                this.socioModal.aniversario = vAniv
+                this.socioModal.pack = vPack
+
+
+                this.$bvModal.show('modal-Socio')
+
+
+            }
+
+
 
             , modalSocioOpen_cickVueTable(){
                  this.clean_SocioModal();
+                 
                 this.$bvModal.show('modal-Socio');
             }
+
+
+            , modalSocioClose() {
+                window.scrollTo(0, 0);
+                this.$bvModal.hide('modal-Socio');
+                this.clean_SocioModal();
+            }
+
 
 
             , clean_SocioModal(){
                 this.socioModal_action = 'new'
                 this.socioKey_edit = ''
-                               
+                this.loadingSpinnerSocioNumber = true
+                        
                 this.socioModal.aniversario = ''
                 this.socioModal.contacto = ''
-                this.socioModal.cotas = ''
                 this.socioModal.criadoa = ''
                 this.socioModal.email = ''
                 this.socioModal.morada =''
                 this.socioModal.nif = ''
                 this.socioModal.nome  = ''
-                this.socioModal.pack = ''
+                this.socioModal.pack = null
                 this.socioModal.socioN = ''
+
+
+                this.automaticallySocioNumberModal();
             }
 
+            ,  validateNIF(value) {
+                const nif = typeof value === 'string' ? value : value.toString();
+                const validationSets = {
+                    one: ['1', '2', '3', '5', '6', '8'],
+                    two: ['45', '70', '71', '72', '74', '75', '77', '79', '90', '91', '98', '99']
+                    };
+                if (nif.length !== 9) return false;
+                if (!validationSets.one.includes(nif.substr(0, 1)) && !validationSets.two.includes(nif.substr(0, 2))) return false;
+                const total = nif[0] * 9 + nif[1] * 8 + nif[2] * 7 + nif[3] * 6 + nif[4] * 5 + nif[5] * 4 + nif[6] * 3 + nif[7] * 2;
+                const modulo11 = (Number(total) % 11);
+                const checkDigit = modulo11 < 2 ? 0 : 11 - modulo11;
+                return checkDigit === Number(nif[8]);
+            }
 
-            , checkNameModalValidation(){
-                if (undefined !== this.socioModal.nome) {
+            , checkSocioNSocioModalValidation(){
+                let socioNConvert = this.listOfSocioN.join();
+                let checkSocioN ;
 
-                    var vName ;
-                    if(this.socioModal.nome.length>=4) {
-                        vName = true;
-                        this.formIsValid.vname = true;
-                    }else{
-                        vName = false;
-                        this.formIsValid.vname = false;
-                    }
-                    return vName;
+                if( this.originalSocioN != this.socioModal.socioN ){
+                   checkSocioN = !socioNConvert.includes(this.socioModal.socioN);
+                }else{
+                    checkSocioN = true
                 }
+
+                this.formIsValid.vsocion = checkSocioN;
+                return checkSocioN;
+
             }
+
+            , checkNameSocioModalValidation(){
+                var vName = null;
+                if (undefined !== this.socioModal.nome) {
+                    vName =  this.socioModal.nome.length==0?null:this.socioModal.nome.length > 3 ;
+                    if(vName!=null) this.formIsValid.vname = vName;
+                }
+                return vName;
+            }
+            
+
+            , checkMoradaSocioModalValidation(){
+                let vMorada = null;
+                if(undefined !== this.socioModal.morada && this.socioModal.morada !== ""){
+                    vMorada = this.socioModal.length==0?null:this.socioModal.morada.length > 4    
+                    if(vMorada!=null) this.formIsValid.vmorada = vMorada;
+                }
+                return vMorada;
+
+            }
+
+
+            , checkContactoSocioModalValidation() {
+                let vContact  = null;
+                if (undefined !== this.socioModal.contacto){
+                    vContact = this.socioModal.contacto.toString().length==0?null:this.socioModal.contacto.toString().length === 9     
+                    if(vContact!=null) this.formIsValid.vcontacto = vContact;
+                }
+                return vContact;
+            }
+
+
+            , checkNIFSocioModalValidation(){
+                let vNIF = null;
+                if(undefined !== this.socioModal.nif){
+                    vNIF = this.socioModal.nif.length==0?null:this.socioModal.nif.length==9&&this.validateNIF(this.socioModal.nif)
+                    if(vNIF!=null) {this.formIsValid.vnif = vNIF} else {this.formIsValid.vnif = true}
+                }
+                return vNIF;
+            }
+
+
+            , checkPackSocioModalValidation(){
+                let vPack = null;
+                 if(undefined === this.socioModal.pack || null === this.socioModal.pack){
+                     vPack =  false
+                     this.formIsValid.vpack = false;
+                 }else {
+                     vPack =  true
+                     this.formIsValid.vpack = true
+                 }
+                 return vPack
+            }
+
+            
+            , automaticallySocioNumberModal(){
+                setTimeout(() => { 
+                        let testNext = 0;
+                        // this.listOfSocioN.forEach((elem) => {
+                        //     if(elem > textNext){
+                        //         textNext = elem
+                        //     }
+                        // })
+                        this.listOfSocioN = [];
+                        firebasedatabase
+                            .collection('/Socio')
+                            .onSnapshot((snapshot) => {
+                                snapshot.forEach((doc) => {
+                                    
+                                    this.listOfSocioN.push(doc.data().socioN);
+
+                                    
+                                        if (doc.data().socioN > testNext){
+                                                testNext = doc.data().socioN
+                                        }
+                                    
+
+                                    
+                                })            
+                                
+                                // ON THE UPDATE WE DONT NEED TO CALCULATE THE NEXT NUMBER
+                                if(this.socioModal_action === 'new'){
+                                    this.socioModal.socioN =  testNext+1;
+                                }
+                                
+
+
+                            })               
+
+                    this.loadingSpinnerSocioNumber = false
+
+                }, 5000)
+            }   
+
+
+
+            , onSocioModelFormSubmit(event){
+                event.preventDefault();
+                
+
+                let valid_form = this.formIsValid.vsocion
+                                && this.formIsValid.vname
+                                && this.formIsValid.vmorada 
+                                && this.formIsValid.vcontacto 
+                                && this.formIsValid.vnif;
+
+                if (valid_form){
+
+                    if (this.socioModal_action === 'new'){
+                       this.firebase_insertSocio(); 
+                    }
+                    
+                    if (this.socioModal_action === 'update'){
+                        this.firebase_updateSocio();
+                    }
+                }
+
+
+
+            }
+
+           , firebase_insertSocio() {
+                
+                var d = new Date();
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate();
+                var yy = d.getFullYear()
+                var mm2 = mm>9?mm:'0'+mm;
+                var dateF = yy + '-' + mm2 + '-' + dd;                
+                this.socioModal.criadoa = dateF;
+
+
+                this.socioModal.cotas = []
+             
+
+                firebasedatabase
+                    .collection('/Socio')
+                    .add(this.socioModal)
+                    .then(() =>{
+                        
+                        this.clean_SocioModal();
+
+
+                        if (!this.statusInsertNextSocio){
+                            
+                            this.modalSocioClose();
+                            
+                            this.bAlertVariantSocioList = 'success'
+                            this.bAlertMessageShowSocioList = 'Socio adicionado com sucesso!'
+                            this.showBAlertSocioList();
+
+                        
+                        }else{
+                            
+                            this.bAlertVariantSocioList_modal = 'success'
+                            this.bAlertMessageShowSocioList_modal = 'Sócio ADICIONADO com sucesso!'
+                            this.showBAlertSocioList_modal();
+
+                        }
+                        
+                        // GET NEXT SOCIO NUMBER
+                        //this.loadingSpinnerSocioNumber = true;
+                        // this.getLastSocioNumber2();
+                        //this.testNumberSocio();
+
+
+                        // este warning/messagem so aparece quando inserimos mais do que um.
+                        //this.bAlertMessageShow = 'Socio adicionado com sucesso!'
+                        //this.showAlertOnSocios()
+
+                    })
+                    .catch((error) =>{
+                        console.log(error);
+                    })
+           }
+
+
+           , firebase_updateSocio() {
+               
+                if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
+                   
+                   firebasedatabase
+                        .collection('/Socio')
+                        // .doc(this.$route.params.id)
+                        .doc(this.socioKey_edit)
+                        .update(this.socioModal)
+                        .then(() => {
+                                                        
+                            this.modalSocioClose();
+                            this.clean_SocioModal();
+
+                            this.bAlertVariantSocioList = 'primary'
+                            this.bAlertMessageShowSocioList = 'Socio ATUALIZADO com sucesso!'
+                            this.showBAlertSocioList();
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                }
+                
+           }
 
 
 
         }//METHODS
 
-        , computed : {
-            
-            bModalTitle_Socio(){
-                return this.socioKey_edit.length!=0?'Editar Socio':'Novo Socio';
-            }
-
-
-            , nameValidatioModal(){
-                return this.checkNameModalValidation();
-            }
-
-
-        }
+        
         
         , components : {
             VueGoodTable
@@ -389,15 +860,43 @@
                             nif : doc.data().nif,
                             contacto : doc.data().contacto,
                             email : doc.data().email,
-                            criadoa : doc.data().criadoa
-                            
+                            criadoa : doc.data().criadoa , 
+                            aniversario : doc.data().aniversario , 
+                            pack : doc.data().pack
                             
                         })
+
+                        //OBJECT ONLY FOR THE SOCIO NUMBER
+                        this.listOfSocioN.push( doc.data().socioN )
                     })
 
                     this.spinnerLoadingSociosTable = false;
 
-                });           
+                    // Get ALL PACKs
+                    firebasedatabase
+                    .collection('/packs')
+                    .onSnapshot((snapshot) => {
+                       this.packList_Socio = [];
+                       this.packList_Socio.push({
+                            value : null
+                            , text : "Escolher pack"
+                            , disabled: true 
+                        })
+                       snapshot.forEach((doc) => {
+                           this.packList_Socio.push({
+                                value   : doc.id,
+                                text    : doc.data().nome + ' (' + doc.data().preco + ' €)',                                
+                           })
+                       })            
+
+                    })
+
+                });   
+                
+                
+
+
+               
            
         }//CREATED
 
