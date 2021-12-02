@@ -379,7 +379,7 @@
         , computed : {
 
             bModalTitle_PackSocio(){
-                return this.packKey_edit.length!=0?'Editar Sócio':'Novo Sócio'
+                return this.packKey_edit.length!=0?'Editar Pacote':'Novo Pacote'
             }
 
             , bModalButtonVariant_PackSocio(){

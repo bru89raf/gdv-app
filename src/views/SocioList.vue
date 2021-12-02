@@ -174,6 +174,7 @@
                                 v-if="!loadingSpinnerSocioNumber"
                                 :state="socioNValidationModal"
                                 min="1"
+                                disabled
                             ></b-form-input>
                             <b-form-invalid-feedback :state="socioNValidationModal">
                                 <span v-if="!loadingSpinnerSocioNumber">Numero de Socio já esta em uso.</span> 
@@ -689,41 +690,16 @@
             
             , automaticallySocioNumberModal(){
                 setTimeout(() => { 
-                        let testNext = 0;
-                        // this.listOfSocioN.forEach((elem) => {
-                        //     if(elem > textNext){
-                        //         textNext = elem
-                        //     }
-                        // })
-                        this.listOfSocioN = [];
-                        firebasedatabase
-                            .collection('/Socio')
-                            .onSnapshot((snapshot) => {
-                                snapshot.forEach((doc) => {
-                                    
-                                    this.listOfSocioN.push(doc.data().socioN);
-
-                                    
-                                        if (doc.data().socioN > testNext){
-                                                testNext = doc.data().socioN
-                                        }
-                                    
-
-                                    
-                                })            
-                                
-                                // ON THE UPDATE WE DONT NEED TO CALCULATE THE NEXT NUMBER
-                                if(this.socioModal_action === 'new'){
-                                    this.socioModal.socioN =  testNext+1;
-                                }
-                                
-
-
-                            })               
-
+                    
+                    // ON THE UPDATE WE DONT NEED TO CALCULATE THE NEXT NUMBER
+                    if(this.socioModal_action === 'new'){
+                        let maxNumberOnList = Math.max.apply(Math, this.listOfSocioN);                                                
+                        this.socioModal.socioN =  maxNumberOnList+1;
+                    }
+                    
                     this.loadingSpinnerSocioNumber = false
 
-                }, 5000)
+                }, 1500)
             }   
 
 
