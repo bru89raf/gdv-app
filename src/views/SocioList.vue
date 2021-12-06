@@ -94,6 +94,17 @@
                             <b-icon icon="cash"></b-icon>                            
                         </router-link> 
 
+                        <!-- <b-button  @click.prevent="GoToXXX(props.row.key, props.row.nome, props.row.cotas)"> -->
+                        <b-button  @click.prevent="modalCotas_click(props.row.key, 
+                                                                    props.row.socioN, 
+                                                                    props.row.nome, 
+                                                                    props.row.cotas, 
+                                                                    props.row.pack, 
+                                                                    props.row.criadoa)">
+                            <b-icon icon="circle"></b-icon>   
+                        </b-button>
+
+
                     </span>
 
                     <span v-if="props.column.field == 'contacto'">
@@ -175,7 +186,19 @@
                                 :state="socioNValidationModal"
                                 min="1"
                                 disabled
-                            ></b-form-input>
+                            >
+                             </b-form-input>
+
+                            <b-input-group-append v-if="!socioNValidationModal">
+                                 
+                                <b-button @click.prevent="automaticallySocioNumberModal()" class="btn btn-large btn-block btn-danger">
+                                        <b-icon icon="arrow-repeat" aria-hidden="true"></b-icon>     
+                                    </b-button>  
+                            </b-input-group-append>
+                            
+                        
+                               
+
                             <b-form-invalid-feedback :state="socioNValidationModal">
                                 <span v-if="!loadingSpinnerSocioNumber">Numero de Socio já esta em uso.</span> 
                             </b-form-invalid-feedback>
@@ -345,12 +368,174 @@
 
             
             </b-modal>
+            
+
+            <!-- END MODAL FOR CREATE OR UPDATE -->
+
+
+
+            <!-- MODAL FOR COTAS -->
+            <!-- <b-modal
+                :id="modalCotasID"
+                :title="modalCotasTitle"
+                button-size="sm"
+                hide-footer
+                hide-header-close
+             >
+                    <form @submit.prevent="onRegistaEditaCotaFormSubmit" >
+                    
+                        <div class="form-group">
+
+                            <b-input-group size="sm"  prepend="Numero Sócio">
+                                <b-form-input
+                                    type="number" 
+                                    v-model="socioByID.socioN" 
+                                    id="cotaSocioN" 
+                                    name="cotaSocioN" 
+                                    class="form-control" 
+                                    disabled
+                                >
+                                </b-form-input>
+                            </b-input-group>
+
+                        </div>        
+
+                        <div class="form-group">
+
+                            <b-input-group size="sm"  prepend="Pack">
+                                <b-form-input
+                                    type="text" 
+                                    v-model="packByID.packNamePreco" 
+                                    id="cotaPack" 
+                                    name="cotaPack" 
+                                    class="form-control" 
+                                    disabled
+                                >
+                                </b-form-input>
+                            </b-input-group>
+
+                        </div>    
+
+
+                        <b-alert show variant="warning" v-if="checkTagsJaPagasMasRemovidas.length > 0">
+                            <span> 
+                                Cota(s) já paga(s) mas removida(s) <br>
+                                <li v-for="(item, index) in checkTagsJaPagasMasRemovidas" v-bind:key="index">{{item}}</li>
+                            </span>
+                        </b-alert>
+
+                        <div class="form-group">
+                            
+                            <b-form-group 
+                                :label="checkLableCotasJaPagas" 
+                                label-for="tags-with-dropdown"
+                            >
+                                
+                                <b-form-tags id="tags-with-dropdown" v-model="value" no-outer-focus class="mb-2">
+                                    <template v-slot="{ tags, disabled, addTag, removeTag }">
+                                    <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+                                        <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                                            <b-form-tag
+                                                @remove="removeTag(tag)"
+                                                :title="tag"
+                                                :disabled="disabled"
+                                                :variant="valueVarient"
+                                            >
+                                                {{ tag }}
+                                                
+                                            </b-form-tag>
+                                        </li>
+                                    </ul>
+
+                                    <b-dropdown size="sm" variant="outline-success" block menu-class="w-100">
+                                        <template #button-content>
+                                        <b-icon icon="calendar-check"></b-icon> Cotas em dívida({{availableOptions.length}}).
+                                        </template>
+                                        
+                                        <b-dropdown-form @submit.stop.prevent="() => {}">
+                                            <b-form-group
+                                                label="Pesquisar"
+                                                label-for="tag-search-input"
+                                                label-cols-md="auto"
+                                                class="mb-0"
+                                                label-size="sm"
+                                                :description="searchDesc"
+                                                :disabled="disabled"
+                                                variant="success"
+                                            >
+                                                <b-form-input
+                                                    v-model="search"
+                                                    id="tag-search-input"
+                                                    type="search"
+                                                    size="sm"
+                                                    autocomplete="off"
+                                                >
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-dropdown-form>
+                                        
+                                        <b-dropdown-divider></b-dropdown-divider>
+                                        
+                                        <b-dropdown-item-button
+                                            v-for="option in availableOptions"
+                                            :key="option"
+                                            @click="onOptionClick({ option, addTag })"
+                                        >
+                                            {{ option }}
+                                        </b-dropdown-item-button>
+                                        <b-dropdown-text v-if="availableOptions.length === 0 && search.length === 0">
+                                        Não existem cotas de momento.
+                                        </b-dropdown-text>
+                                    </b-dropdown>
+                                    </template>
+                                </b-form-tags>
+                        </b-form-group>
+
+
+                        </div>
+
+                        <span v-if="valoraPagar > 0">
+                        
+                            <div class="form-group">
+                                <b-row class="my-1">
+                                    <b-col sm="5">
+                                    <label for="input-default">Valor a pagar:</label>
+                                    </b-col>
+                                    <b-col sm="5">
+                                        <fieldset disabled>
+                                            <b-input-group prepend="€" >
+                                                <b-form-input v-model="valoraPagar" :state="true">
+                                                </b-form-input>
+                                            </b-input-group>
+                                        </fieldset>                            
+                                    </b-col>
+                                </b-row>
+                            </div>
+
+                        </span>
+
+
+
+                    
+                    </form>
+
+
+            
+            
+            </b-modal>   -->
+
+
+            <!-- END MODAL FOR COTAS -->
+
 
 
         </div>
 
+        <!-- <b-button pill variant="success" @click.prevent="GoToXXX()">
+                <b-icon icon="plus-circle-fill" ></b-icon> 
+        </b-button>  -->
 
-    
+        <PagarCotas :socioKey="xptoTest"  :socioNome="xptoTestName" :socioCoyas="xptoTestCotas"/> 
 
         <!-- SIDE BAR -->
         <!-- <down-list-socio >
@@ -365,6 +550,7 @@
     import { firebasedatabase } from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
+    import PagarCotas from '@/components/PagarCotas.vue'
     
     
     export default {
@@ -378,6 +564,11 @@
                 , bAlertMessageShowSocioList : ''
                 , dismissAlertSocioSecs : 3
                 , dismissAlertCountDownSuccessSocioList : 0
+                
+
+                , xptoTest : ''
+                , xptoTestName : ''
+                , xptoTestCotas : []
 
                , columns: [
                     {
@@ -410,6 +601,7 @@
 
 
                 // MODAL
+                , modalSocioID : 'modal-Socio'
                 , socioModal_action : 'new'
                 , socioKey_edit : ''
                 , socioModal : {
@@ -452,6 +644,26 @@
                 // ---modal
 
 
+                // - Modal cotas
+                , modalCotasID : 'modal-Cotas'
+                , modalCotasTitle : ''
+
+                , socioByID : []   
+                , value : []
+
+
+                , cotasAbertas : []
+                , cotasAbertasObjecto : []
+                , tagsCotasAbertas : []
+
+                , options : []
+                
+                , packByID : []
+
+
+
+                // --- Modal cotas
+
 
             }
         }//DATA
@@ -491,6 +703,57 @@
                 return this.checkPackSocioModalValidation();
             }
 
+
+            // :: modal Cotas
+            // , criteria(){
+            //     return this.search.trim().toLowerCase()
+            // }
+
+            // , availableOptions() {
+            //     const criteria = this.criteria
+            //     const options = this.options.filter(opt => this.value.indexOf(opt) === -1)
+            //     if (criteria) {
+            //         return options.filter(opt => opt.toLowerCase().indexOf(criteria) > -1);
+            //     }
+            //     return options
+            // }
+
+            // , searchDesc() {
+            //     if (this.criteria && this.availableOptions.length === 0) {
+            //     return 'Não foi encontrada nenhuma cota.'
+            //     }
+            //     return ''
+            // }
+
+            // , state() {
+            //     let status = this.dirty ? this.tagsAbertas.length >= 1 && this.cotasAbertas.includes(this.tags): null
+            //     return status
+            // }
+            
+            // , checkTagsJaPagas(){
+            //     let cotasApagadas = this.cotasJaPagas.filter(yea => !this.tagsCotasJaPagas.includes(yea))
+            //     return cotasApagadas
+            // }
+
+            // , valoraPagar(){
+            //     let lenghtCotasJaPagas = this.cotasJaPagas.length;
+            //     let lenghtNewCotas = this.value.length ;
+            //     let totalPrice = (lenghtNewCotas - lenghtCotasJaPagas) * this.packByID.packPreco;
+            //     return totalPrice.toFixed(2);
+            // }
+            
+            // , checkTagsJaPagasMasRemovidas(){
+            //     let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))
+            //     let missing = checkMissing( this.value, this.cotasJaPagas)
+            //     return missing;
+            // }
+            
+            // , checkLableCotasJaPagas(){
+            //     return this.cotasJaPagas.length == 0 &&  this.value.length == 0?'Nenhuma cota paga até ao momento!' : 'Cotas pagas'
+            // }
+            // :: /modal Cotas
+
+
         
 
         }//COMPUTED
@@ -498,54 +761,13 @@
 
         , methods : {
 
+            // :::: NAVIGATION
             GoToNovoSocio(){
                 this.$router.push('/socio')
             }
 
-            , deleteSocio(socioKey){          
 
-                if( window.confirm("APAGAR Sócio?") ){
-
-                    if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
-
-                        firebasedatabase
-                            .collection('/Socio')
-                            .doc(socioKey)
-                            .delete()
-                            .then(() => {
-                                this.bAlertVariantSocioList = 'danger'
-                                this.bAlertMessageShowSocioList = 'Sócio removido com sucesso!'
-                                this.showBAlertSocioList();
-                                
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            })
-                    }
-
-                }
-            }
-
-            , countDownChangedAlertSocioList(dismissCountDownSuccess){
-                this.dismissAlertCountDownSuccessSocioList = dismissCountDownSuccess
-            }
-
-            , showBAlertSocioList(){
-                this.dismissAlertCountDownSuccessSocioList = this.dismissAlertSocioSecs
-            }
-
-            // ON MODAL
-            , countDownChangedAlertSocioList_modal(dismissCountDownSuccess){
-                this.dismissAlertCountDownSuccessSocioList_modal = dismissCountDownSuccess
-            }
-
-            , showBAlertSocioList_modal(){
-                this.dismissAlertCountDownSuccessSocioList_modal = this.dismissAlertSocioSecs
-            }
-
-
-
-            
+            // :::: CREATE , UPDATES AND DELETES
 
             , editSocio(vKey, vSocion, vNome, vMorada, vNIF, vContacto, vEmail, vAniv, vPack){
                 
@@ -569,23 +791,347 @@
 
             }
 
+            , deleteSocio(socioKey){          
+                
+                if( window.confirm("APAGAR Sócio?") ){
+
+                    if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
+
+                        firebasedatabase
+                            .collection('/Socio')
+                            .doc(socioKey)
+                            .delete()
+                            .then(() => {
+                                this.bAlertVariantSocioList = 'danger'
+                                this.bAlertMessageShowSocioList = 'Sócio removido com sucesso!'
+                                this.showBAlertSocioList();
+
+                                // this.updateListOfNumbersAfterDelete();
+
+                                
+                                
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                    }
+
+                }
+            }
+
+            , firebase_insertSocio() {
+                
+                var d = new Date();
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate();
+                var yy = d.getFullYear()
+                var mm2 = mm>9?mm:'0'+mm;
+                var dateF = yy + '-' + mm2 + '-' + dd;                
+                this.socioModal.criadoa = dateF;
 
 
-            , modalSocioOpen_cickVueTable(){
-                 this.clean_SocioModal();
-                 
-                this.$bvModal.show('modal-Socio');
+                this.socioModal.cotas = []
+             
+
+                firebasedatabase
+                    .collection('/Socio')
+                    .add(this.socioModal)
+                    .then(() =>{
+                        
+                        this.clean_SocioModal();
+
+
+                        if (!this.statusInsertNextSocio){
+                            
+                            this.statusInsertNextSocio = false;
+                            this.modalSocioClose();
+                            
+                            this.bAlertVariantSocioList = 'success'
+                            this.bAlertMessageShowSocioList = 'Socio adicionado com sucesso!'
+                            this.showBAlertSocioList();
+                            
+                        
+                        }else{
+                            
+                            this.bAlertVariantSocioList_modal = 'success'
+                            this.bAlertMessageShowSocioList_modal = 'Sócio ADICIONADO com sucesso!'                            
+                            this.showBAlertSocioList_modal();
+
+                        }
+                        
+                        // GET NEXT SOCIO NUMBER
+                        //this.loadingSpinnerSocioNumber = true;
+                        // this.getLastSocioNumber2();
+                        //this.testNumberSocio();
+
+
+                        // este warning/messagem so aparece quando inserimos mais do que um.
+                        //this.bAlertMessageShow = 'Socio adicionado com sucesso!'
+                        //this.showAlertOnSocios()
+
+                    })
+                    .catch((error) =>{
+                        console.log(error);
+                    })
             }
 
 
+            , firebase_updateSocio() {
+               
+                if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
+                   
+                   firebasedatabase
+                        .collection('/Socio')
+                        // .doc(this.$route.params.id)
+                        .doc(this.socioKey_edit)
+                        .update(this.socioModal)
+                        .then(() => {
+                                                        
+                            this.modalSocioClose();
+                            this.clean_SocioModal();
+
+                            this.bAlertVariantSocioList = 'primary'
+                            this.bAlertMessageShowSocioList = 'Socio ATUALIZADO com sucesso!'
+                            this.showBAlertSocioList();
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                }
+                
+            }
+
+            , onSocioModelFormSubmit(event){
+                event.preventDefault();
+                
+
+                let valid_form = this.formIsValid.vsocion
+                                && this.formIsValid.vname
+                                && this.formIsValid.vmorada 
+                                && this.formIsValid.vcontacto 
+                                && this.formIsValid.vnif;
+
+                if (valid_form){
+
+                    if (this.socioModal_action === 'new'){
+                       this.firebase_insertSocio(); 
+                    }
+                    
+                    if (this.socioModal_action === 'update'){
+                        this.firebase_updateSocio();
+                    }
+                }
+
+
+
+            }
+            
+
+            , onRegistaEditaCotaFormSubmit(){
+                
+                if (window.confirm("Quer mesmo adicioncar as cotas como Pagas?\n " + this.value)){
+                    
+                    let checker = (arr, target) => target.every(v => arr.includes(v));
+                    let checkOldRegistration = checker(this.value, this.cotasJaPagas)
+                    
+                    let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))                
+                    
+                    let missing = checkMissing( this.value, this.cotasJaPagas)
+                    this.missingCotasOnUpdate = missing;
+
+                    if(!checkOldRegistration){
+                        
+                        if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
+                                                        
+                            this.updateSocioRecord(this.value)
+                            this.backToSocioList();
+
+                        }
+
+                    }  else {
+                     
+                        this.updateSocioRecord(this.value)
+                        this.backToSocioList();
+                    }
+
+                }
+
+
+            }
+
+            , updateSocioRecord(socioCotas){
+                 firebasedatabase
+                    .collection('/Socio')
+                    .doc(this.$route.params.id)
+                    .update({
+                        cotas : socioCotas
+                    })
+                    .catch((error) =>{
+                        console.log(error)
+                    })
+            }
+
+
+
+
+            // :::: GETs and TRANSFORMATIONS
+            , getListOfSocios(){
+                firebasedatabase
+                    .collection('/Socio')
+                    .onSnapshot((snapshot) =>{
+                        this.rows = [] ;
+                        this.listOfSocioN = []
+                        
+                        snapshot.forEach((doc) =>{
+                            
+                            this.rows.push({
+                                key : doc.id,
+                                socioN : doc.data().socioN,
+                                nome : doc.data().nome,
+                                morada : doc.data().morada,
+                                nif : doc.data().nif,
+                                contacto : doc.data().contacto,
+                                email : doc.data().email,
+                                criadoa : doc.data().criadoa , 
+                                aniversario : doc.data().aniversario , 
+                                pack : doc.data().pack, 
+
+                                cotas : doc.data().cotas
+                                
+                            })
+
+                            //OBJECT ONLY FOR THE SOCIO NUMBER
+                            this.listOfSocioN.push( doc.data().socioN )
+                        })
+
+                        // this.spinnerLoadingSociosTable = false;
+                    });  
+            }
+
+
+            , getCotas(){
+                firebasedatabase
+                    .collection('/cotas')
+                    .onSnapshot((snapShot) => {
+                        this.cotasAbertas = [];
+                        snapShot.forEach((doc) => { 
+                            
+                            this.cotasAbertasObjecto = doc.data();                           
+
+                            //Mostrar apenas os anos seguinte a data de criação do user
+                            if (doc.data().ano >=  this.socioByID.criadoaYear){
+                                this.options.push (
+                                    doc.data().ano
+                                )
+                            }
+                            
+                            this.options.sort();
+
+                            // TAGS ABERTAS (POSSIVEIS ANOS QUE PODEMOS REGISTAR)
+                            this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea) );
+                            
+                        })
+                    })
+            }
+            
+            , getPackByID(packID){
+                let dbRefDocPack =  firebasedatabase
+                    .collection('/packs')
+                    .doc(packID);
+
+                dbRefDocPack.get()
+                    .then((doc) =>{ 
+                        
+                        this.packByID = doc.data();
+                        this.packByID.packNamePreco = doc.data().nome + '(' + doc.data().preco + ' €)'
+                        this.packByID.packPreco = doc.data().preco
+
+                    })
+                    .catch((error) => {
+                            console.log(error)
+                    })
+            }
+            
+
+            , onOptionClick({ option, addTag }) {
+                addTag(option)
+                this.search = ''
+            }
+
+     
+
+
+
+            // :::: MODAL'S
+            , modalSocioOpen_cickVueTable(){
+                 this.cleanFull_SocioModal();
+                 
+                this.show_Modal('modal-Socio');
+                // this.$bvModal.show('modal-Socio');
+            }
+
             , modalSocioClose() {
                 window.scrollTo(0, 0);
-                this.$bvModal.hide('modal-Socio');
+                // this.$bvModal.hide('modal-Socio');
+                this.close_Modal('modal-Socio')
                 this.clean_SocioModal();
             }
 
 
+            , modalCotas_click(socioKey, socioN, socioName, socioCotasJaPagas, socioPack,socioCriadoa){
+                
+                this.modalCotasTitle = socioName;
 
+                this.socioByID.key      = socioKey;
+                this.socioByID.socioN   = socioN;
+                this.socioByID.nome     = socioName;
+                this.socioByID.cotas    = socioCotasJaPagas;
+                this.socioByID.pack     = socioPack;
+                this.socioByID.criadoa  = socioCriadoa;
+                
+                 //SET YEAR  from the CRIADOA
+                let socioCriadoA_year = (new Date(socioCriadoa).getFullYear());
+                this.socioByID.criadoaYear = socioCriadoA_year;
+
+
+                this.getPackByID(socioPack) //GET THE SPECIFIC PACK
+
+                this.getCotas(); //GET ALL REGISTERED YEARS
+
+               
+
+                this.show_Modal(this.modalCotasID);
+            }
+
+
+            , show_Modal(modalID){
+                this.$bvModal.show(modalID);
+            }
+
+            , close_Modal(modalID){
+                this.$bvModal.hide(modalID);
+            }
+
+            // :::: ALERT's
+            , showBAlertSocioList_modal(){
+                this.dismissAlertCountDownSuccessSocioList_modal = this.dismissAlertSocioSecs
+            }
+            
+            , countDownChangedAlertSocioList(dismissCountDownSuccess){
+                this.dismissAlertCountDownSuccessSocioList = dismissCountDownSuccess
+            }
+
+            , countDownChangedAlertSocioList_modal(dismissCountDownSuccess){
+                this.dismissAlertCountDownSuccessSocioList_modal = dismissCountDownSuccess
+            }
+
+            , showBAlertSocioList(){
+                this.dismissAlertCountDownSuccessSocioList = this.dismissAlertSocioSecs
+            }
+
+
+
+            // :::: CLEAN
             , clean_SocioModal(){
                 this.socioModal_action = 'new'
                 this.socioKey_edit = ''
@@ -600,11 +1146,33 @@
                 this.socioModal.nome  = ''
                 this.socioModal.pack = null
                 this.socioModal.socioN = ''
+                // this.statusInsertNextSocio = false;
+
+
+                this.automaticallySocioNumberModal();
+            }
+            , cleanFull_SocioModal(){
+                this.socioModal_action = 'new'
+                this.socioKey_edit = ''
+                this.loadingSpinnerSocioNumber = true
+                        
+                this.socioModal.aniversario = ''
+                this.socioModal.contacto = ''
+                this.socioModal.criadoa = ''
+                this.socioModal.email = ''
+                this.socioModal.morada =''
+                this.socioModal.nif = ''
+                this.socioModal.nome  = ''
+                this.socioModal.pack = null
+                this.socioModal.socioN = ''
+                this.statusInsertNextSocio = false;
 
 
                 this.automaticallySocioNumberModal();
             }
 
+
+            // :::: VALIDATION's
             ,  validateNIF(value) {
                 const nif = typeof value === 'string' ? value : value.toString();
                 const validationSets = {
@@ -641,8 +1209,7 @@
                     if(vName!=null) this.formIsValid.vname = vName;
                 }
                 return vName;
-            }
-            
+            }            
 
             , checkMoradaSocioModalValidation(){
                 let vMorada = null;
@@ -654,7 +1221,6 @@
 
             }
 
-
             , checkContactoSocioModalValidation() {
                 let vContact  = null;
                 if (undefined !== this.socioModal.contacto){
@@ -664,7 +1230,6 @@
                 return vContact;
             }
 
-
             , checkNIFSocioModalValidation(){
                 let vNIF = null;
                 if(undefined !== this.socioModal.nif){
@@ -673,7 +1238,6 @@
                 }
                 return vNIF;
             }
-
 
             , checkPackSocioModalValidation(){
                 let vPack = null;
@@ -686,7 +1250,6 @@
                  }
                  return vPack
             }
-
             
             , automaticallySocioNumberModal(){
                 setTimeout(() => { 
@@ -702,153 +1265,63 @@
                 }, 1500)
             }   
 
+            , updateListOfNumbersAfterDelete(){
+                //
+                firebasedatabase
+                        .collection('/Socio')
+                        .onSnapshot((snapshot) =>{
+                            this.listOfSocioN = []
+                            
+                            snapshot.forEach((doc) =>{                      
+                                
+                                //OBJECT ONLY FOR THE SOCIO NUMBER
+                                this.listOfSocioN.push( doc.data().socioN )
+                            })
 
+                        }); 
 
-            , onSocioModelFormSubmit(event){
-                event.preventDefault();
-                
-
-                let valid_form = this.formIsValid.vsocion
-                                && this.formIsValid.vname
-                                && this.formIsValid.vmorada 
-                                && this.formIsValid.vcontacto 
-                                && this.formIsValid.vnif;
-
-                if (valid_form){
-
-                    if (this.socioModal_action === 'new'){
-                       this.firebase_insertSocio(); 
-                    }
-                    
-                    if (this.socioModal_action === 'update'){
-                        this.firebase_updateSocio();
-                    }
-                }
-
+                this.automaticallySocioNumberModal();
 
 
             }
 
-           , firebase_insertSocio() {
-                
-                var d = new Date();
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate();
-                var yy = d.getFullYear()
-                var mm2 = mm>9?mm:'0'+mm;
-                var dateF = yy + '-' + mm2 + '-' + dd;                
-                this.socioModal.criadoa = dateF;
 
 
-                this.socioModal.cotas = []
-             
+            , GoToXXX(keyyy, sNome, sCotas){
+                 this.xptoTest = keyyy
+                 this.xptoTestName = sNome;
+                 this.xptoTestCotas = sCotas;
 
-                firebasedatabase
-                    .collection('/Socio')
-                    .add(this.socioModal)
-                    .then(() =>{
-                        
-                        this.clean_SocioModal();
-
-
-                        if (!this.statusInsertNextSocio){
-                            
-                            this.modalSocioClose();
-                            
-                            this.bAlertVariantSocioList = 'success'
-                            this.bAlertMessageShowSocioList = 'Socio adicionado com sucesso!'
-                            this.showBAlertSocioList();
-
-                        
-                        }else{
-                            
-                            this.bAlertVariantSocioList_modal = 'success'
-                            this.bAlertMessageShowSocioList_modal = 'Sócio ADICIONADO com sucesso!'
-                            this.showBAlertSocioList_modal();
-
-                        }
-                        
-                        // GET NEXT SOCIO NUMBER
-                        //this.loadingSpinnerSocioNumber = true;
-                        // this.getLastSocioNumber2();
-                        //this.testNumberSocio();
-
-
-                        // este warning/messagem so aparece quando inserimos mais do que um.
-                        //this.bAlertMessageShow = 'Socio adicionado com sucesso!'
-                        //this.showAlertOnSocios()
-
-                    })
-                    .catch((error) =>{
-                        console.log(error);
-                    })
-           }
-
-
-           , firebase_updateSocio() {
-               
-                if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
-                   
-                   firebasedatabase
-                        .collection('/Socio')
-                        // .doc(this.$route.params.id)
-                        .doc(this.socioKey_edit)
-                        .update(this.socioModal)
-                        .then(() => {
-                                                        
-                            this.modalSocioClose();
-                            this.clean_SocioModal();
-
-                            this.bAlertVariantSocioList = 'primary'
-                            this.bAlertMessageShowSocioList = 'Socio ATUALIZADO com sucesso!'
-                            this.showBAlertSocioList();
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                }
-                
-           }
+                this.$bvModal.show('modal-XXX');
+            }
 
 
 
+
+         
+
+
+
+            
         }//METHODS
 
         
         
         , components : {
             VueGoodTable
+            , PagarCotas
+            
         }//COMPONENTS
         
+
+
         , created() {
-                          
-            firebasedatabase
-                .collection('/Socio')
-                .onSnapshot((snapshot) =>{
-                    this.rows = [] ;
-                    snapshot.forEach((doc) =>{
-                        
-                        this.rows.push({
-                            key : doc.id,
-                            socioN : doc.data().socioN,
-                            nome : doc.data().nome,
-                            morada : doc.data().morada,
-                            nif : doc.data().nif,
-                            contacto : doc.data().contacto,
-                            email : doc.data().email,
-                            criadoa : doc.data().criadoa , 
-                            aniversario : doc.data().aniversario , 
-                            pack : doc.data().pack
-                            
-                        })
+                
+                this.getListOfSocios();
 
-                        //OBJECT ONLY FOR THE SOCIO NUMBER
-                        this.listOfSocioN.push( doc.data().socioN )
-                    })
-
-                    this.spinnerLoadingSociosTable = false;
-
-                    // Get ALL PACKs
+                this.spinnerLoadingSociosTable = false;
+                
+                // Get ALL PACKs
                     firebasedatabase
                     .collection('/packs')
                     .onSnapshot((snapshot) => {
@@ -866,12 +1339,6 @@
                        })            
 
                     })
-
-                });   
-                
-                
-
-
                
            
         }//CREATED
