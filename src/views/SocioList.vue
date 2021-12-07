@@ -50,13 +50,13 @@
 
 
                 <div slot="table-actions">
-                    <b-button pill variant="success" @click.prevent="GoToNovoSocio()">
+                    <!-- <b-button pill variant="success" size="sm" @click.prevent="GoToNovoSocio()">
                             <b-icon icon="plus-circle-fill" ></b-icon> 
-                    </b-button> 
+                    </b-button>  -->
 
 
-                     <b-button pill variant="success" @click.prevent="modalSocioOpen_cickVueTable()">
-                            <b-icon icon="plus-circle" ></b-icon> 
+                     <b-button pill variant="success" size="sm" @click.prevent="modalSocioOpen_cickVueTable()">
+                            <b-icon icon="plus-circle-fill" ></b-icon> 
                     </b-button> 
                     
                     <!-- 
@@ -86,18 +86,22 @@
                                                                 props.row.email,
                                                                 props.row.aniversario,
                                                                 props.row.pack )" 
-                                    variant="primary" class="btn">
+                                    size="sm" variant="primary" class="btn">
                             <b-icon icon="pencil"></b-icon>  
                         </b-button> 
 
 
-                        <router-link :to="{name : 'saveSocioCota' , params : { id : props.row.key}}" class="btn btn-warning">
-                            <b-icon icon="cash"></b-icon>                            
-                        </router-link> 
+                        <!-- <router-link :to="{name : 'saveSocioCota' , params : { id : props.row.key}}" size="sm" class="btn btn-warning">
+                            <b-icon size="sm" icon="cash"></b-icon>                            
+                        </router-link>  -->
 
-                        <b-button  @click.prevent="GoToXXX(props.row.key, props.row.nome, props.row.cotas)">                     
-                            <b-icon icon="circle"></b-icon>   
+                        <b-button  size="sm" @click="$router.push({name : 'saveSocioCota' , params : { id : props.row.key}})" variant="warning">                     
+                            <b-icon icon="cash"></b-icon>   
                         </b-button>
+
+                        <!-- <b-button  size="sm" @click.prevent="GoToXXX(props.row.key, props.row.nome, props.row.cotas)">                     
+                            <b-icon icon="circle"></b-icon>   
+                        </b-button> -->
 
 
                     </span>
@@ -112,9 +116,8 @@
 
                     <span v-if="props.column.field == 'moreinfo'">
                         <div class="p-2">
-                            <b-button :id="`socioMoreInfo-${props.row.key}`" variant="primary" ref="button">
-                                <b-icon icon="three-dots-vertical"></b-icon>
-                                
+                            <b-button :id="`socioMoreInfo-${props.row.key}`" size="sm" variant="info" ref="button">
+                                <b-icon icon="three-dots-vertical"></b-icon>                                
                             </b-button>
                             <b-popover 
                                 ref="popover" 
@@ -362,12 +365,15 @@
 
 
             
-            </b-modal>
+            </b-modal>            
+
+            <!-- //END MODAL FOR CREATE OR UPDATE -->
+
             
+            
+            <!-- MODAL FOR COTAS -->
 
-            <!-- END MODAL FOR CREATE OR UPDATE -->
-
-
+            <!-- //MODAL FOR COTAS -->
 
 
 
@@ -484,9 +490,12 @@
                 , bAlertMessageShowSocioList_modal : ''
                 , dismissAlertSocioSecs_modal : 3
                 
-                // ---modal
+                // ---/modal
 
-
+                
+                // ---modal cotas
+                    
+                // ---/modal cotas
 
 
 
