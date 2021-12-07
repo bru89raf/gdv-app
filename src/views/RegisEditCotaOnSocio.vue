@@ -287,30 +287,30 @@
             }
 
 
-            , validatorYearCota(tag){
-                    return tag === tag.toLowerCase() && tag.length == 4 && this.cotasAbertas.includes(tag);
-            }
+            // , validatorYearCota(tag){
+            //         return tag === tag.toLowerCase() && tag.length == 4 && this.cotasAbertas.includes(tag);
+            // }
 
 
-            , updateCotasPorPagar(){
-                let emFalta = [];
-                emFalta = this.cotasAbertas.filter(yea => !this.tagsCotasAbertas.includes(yea))
+            // , updateCotasPorPagar(){
+            //     let emFalta = [];
+            //     emFalta = this.cotasAbertas.filter(yea => !this.tagsCotasAbertas.includes(yea))
 
-                return emFalta;
-            }
+            //     return emFalta;
+            // }
 
-            , updateCotasJaPagas(){
-                let cotasJaPgasEliminadas = [];
-                cotasJaPgasEliminadas =  this.cotasJaPagas.filter(yea => !this.tagsCotasJaPagas.includes(yea))
+            // , updateCotasJaPagas(){
+            //     let cotasJaPgasEliminadas = [];
+            //     cotasJaPgasEliminadas =  this.cotasJaPagas.filter(yea => !this.tagsCotasJaPagas.includes(yea))
                 
-                return cotasJaPgasEliminadas;                
-            }
+            //     return cotasJaPgasEliminadas;                
+            // }
 
 
-            , getValorPagarCotas(){
-                let tagsSeleccionadas = this.tagsAbertas.length()
-                return tagsSeleccionadas + '€'
-            }
+            // , getValorPagarCotas(){
+            //     let tagsSeleccionadas = this.tagsAbertas.length()
+            //     return tagsSeleccionadas + '€'
+            // }
             
             , onRegistaEditaCotaFormSubmit(){
                 
