@@ -384,7 +384,7 @@
                 <b-icon icon="plus-circle-fill" ></b-icon> 
         </b-button>  -->
 
-        <PagarCotas :socioKey="xptoTest"  :socioNome="xptoTestName" :socioCoyas="xptoTestCotas"/> 
+        <!-- <PagarCotas :socioKey="xptoTest"  :socioNome="xptoTestName" :socioCoyas="xptoTestCotas"/>  -->
 
         <!-- SIDE BAR -->
         <!-- <down-list-socio >
@@ -399,7 +399,7 @@
     import { firebasedatabase } from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
-    import PagarCotas from '@/components/PagarCotas.vue'
+    // import PagarCotas from '@/components/PagarCotas.vue'
     
     
     export default {
@@ -788,7 +788,7 @@
                             this.listOfSocioN.push( doc.data().socioN )
                         })
 
-                        // this.spinnerLoadingSociosTable = false;
+                         this.spinnerLoadingSociosTable = false;
                     });  
             }
 
@@ -984,6 +984,7 @@
             }
             
             , automaticallySocioNumberModal(){
+                this.loadingSpinnerSocioNumber = true
                 setTimeout(() => { 
                     
                     // ON THE UPDATE WE DONT NEED TO CALCULATE THE NEXT NUMBER
@@ -1034,7 +1035,7 @@
         
         , components : {
             VueGoodTable
-            , PagarCotas
+            // , PagarCotas
             
         }//COMPONENTS
         
@@ -1044,7 +1045,7 @@
                 
                 this.getListOfSocios();
 
-                this.spinnerLoadingSociosTable = false;
+                // this.spinnerLoadingSociosTable = false;
                 
                 // Get ALL PACKs
                     firebasedatabase
