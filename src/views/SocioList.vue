@@ -99,9 +99,16 @@
                             <b-icon icon="cash"></b-icon>   
                         </b-button>
 
-                        <!-- <b-button  size="sm" @click.prevent="GoToXXX(props.row.key, props.row.nome, props.row.cotas)">                     
+                        <b-button  size="sm" @click.prevent="GoToCotas  (props.row.key, 
+                                                                        props.row.socioN, 
+                                                                        props.row.nome, 
+                                                                        props.row.pack,
+                                                                        props.row.cotas,
+                                                                        props.row.criadoa
+                                                                        
+                                                                        )">                     
                             <b-icon icon="circle"></b-icon>   
-                        </b-button> -->
+                        </b-button>
 
 
                     </span>
@@ -372,8 +379,132 @@
             
             
             <!-- MODAL FOR COTAS -->
+            <b-modal 
+                id="modal-Cotas" 
+                title="Cotas" 
+                button-size="sm"
+                hide-footer
+                hide-header-close
+            >
 
-            <!-- //MODAL FOR COTAS -->
+                <form @submit.prevent="onRegistaEditaCotaFormSubmit" >
+                    
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Numero Sócio">
+                            <b-form-input
+                                type="number" 
+                                v-model="socioByID.socioN" 
+                                id="socioNumero" 
+                                name="socioNumero" 
+                                class="form-control" 
+                                disabled
+                            >
+                            </b-form-input>   
+                         </b-input-group>   
+                    </div>   
+                    <div class="form-group">
+                        <b-input-group size="sm"  prepend="Pacote">
+                            <b-form-input
+                                type="text" 
+                                v-model="socioByID.packNomePreco" 
+                                id="socioNumero" 
+                                name="socioNumero" 
+                                class="form-control" 
+                                disabled
+                            >
+                            </b-form-input>   
+                        </b-input-group>   
+                    </div>   
+                    
+
+                     <b-alert show variant="warning" v-if="checkTagsJaPagasMasRemovidas.length > 0">
+                            <span> 
+                                Cota(s) já paga(s) mas removida(s) <br>
+                                <li v-for="(item, index) in checkTagsJaPagasMasRemovidas" v-bind:key="index">{{item}}</li>
+                            </span>
+                        </b-alert>
+
+
+
+
+                    <div class="form-group">
+                            
+                            <b-form-group 
+                                :label="checkLableCotasJaPagas" 
+                                label-for="tags-with-dropdown"
+                            >
+                                
+                                <b-form-tags id="tags-with-dropdown" v-model="value" no-outer-focus class="mb-2">
+                                    <template v-slot="{ tags, disabled, addTag, removeTag }">
+                                    <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+                                        <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                                            <b-form-tag
+                                                @remove="removeTag(tag)"
+                                                :title="tag"
+                                                :disabled="disabled"
+                                                :variant="valueVarient"
+                                            >
+                                                {{ tag }}
+                                                
+                                            </b-form-tag>
+                                        </li>
+                                    </ul>
+
+                                    <b-dropdown size="sm" variant="outline-success" block menu-class="w-100">
+                                        <template #button-content>
+                                        <b-icon icon="calendar-check"></b-icon> Cotas em dívida({{availableOptions.length}}).
+                                        </template>
+                                        
+                                        <b-dropdown-form @submit.stop.prevent="() => {}">
+                                            <b-form-group
+                                                label="Pesquisar"
+                                                label-for="tag-search-input"
+                                                label-cols-md="auto"
+                                                class="mb-0"
+                                                label-size="sm"
+                                                :description="searchDesc"
+                                                :disabled="disabled"
+                                                variant="success"
+                                            >
+                                                <b-form-input
+                                                    v-model="search"
+                                                    id="tag-search-input"
+                                                    type="search"
+                                                    size="sm"
+                                                    autocomplete="off"
+                                                >
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-dropdown-form>
+                                        
+                                        <b-dropdown-divider></b-dropdown-divider>
+                                        
+                                        <b-dropdown-item-button
+                                            v-for="option in availableOptions"
+                                            :key="option"
+                                            @click="onOptionClick({ option, addTag })"
+                                        >
+                                            {{ option }}
+                                        </b-dropdown-item-button>
+                                        <b-dropdown-text v-if="availableOptions.length === 0 && search.length === 0">
+                                        Não existem cotas de momento.
+                                        </b-dropdown-text>
+                                    </b-dropdown>
+                                    </template>
+                                </b-form-tags>
+                            
+                            </b-form-group>
+
+
+                    </div>
+
+
+
+                </form>
+
+
+            </b-modal>
+            <!-- //END MODAL FOR COTAS -->
 
 
 
@@ -450,8 +581,11 @@
 
 
                 // MODAL
-                , modalSocioID : 'modal-Socio'
+                    // -- new, update, cota
                 , socioModal_action : 'new'
+
+
+                , modalSocioID : 'modal-Socio'
                 , socioKey_edit : ''
                 , socioModal : {
                     aniversario : ''
@@ -494,7 +628,22 @@
 
                 
                 // ---modal cotas
-                    
+                , socioByID : []
+
+                , cotasAbertas : []
+                , cotasAbertasObjecto : []
+                , tagsCotasAbertas : []
+                
+                , cotasJaPagas : []
+                , tagsCotasJaPagas : []
+                
+
+                , value : []  //alterar o nome para valueCotasOagas
+                , valueVarient : '' //COLOR of Labels
+                , search : '' //input to search for cotas
+
+
+                , options: []
                 // ---/modal cotas
 
 
@@ -511,7 +660,6 @@
             , bModalButtonVariant_Socio() {
                 return this.socioModal_action==='new'?'success':'primary'
             }
-
 
             , socioNValidationModal(){
                 return this.checkSocioNSocioModalValidation();
@@ -536,6 +684,45 @@
             , packValidationSocioModal(){
                 return this.checkPackSocioModalValidation();
             }
+
+            // :: COTAS MODAL
+            
+            , criteria(){
+                return this.search.trim().toLowerCase()
+            }
+            
+            , availableOptions() {
+                const criteria = this.criteria
+                const options = this.options.filter(opt => this.value.indexOf(opt) === -1)
+                if (criteria) {
+                    return options.filter(opt => opt.toLowerCase().indexOf(criteria) > -1);
+                }
+                return options
+            }
+
+            , searchDesc() {
+                if (this.criteria && this.availableOptions.length === 0) {
+                    return 'Não foi encontrada nenhuma cota.'
+                }
+                return ''
+            }
+
+            , state() {
+                let status = this.dirty ? this.tagsAbertas.length >= 1 && this.cotasAbertas.includes(this.tags): null
+                return status
+            }    
+
+            , checkLableCotasJaPagas(){
+                return this.cotasJaPagas.length == 0 &&  this.value.length == 0?'Nenhuma cota paga ate o momento!' : 'Cotas pagas'
+            }
+            
+            , checkTagsJaPagasMasRemovidas(){
+                let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))
+                let missing = checkMissing( this.value, this.cotasJaPagas)
+                return missing;
+            }
+
+            // :: END COTAS MODAL
 
 
         
@@ -713,32 +900,7 @@
 
             , onRegistaEditaCotaFormSubmit(){
                 
-                if (window.confirm("Quer mesmo adicioncar as cotas como Pagas?\n " + this.value)){
-                    
-                    let checker = (arr, target) => target.every(v => arr.includes(v));
-                    let checkOldRegistration = checker(this.value, this.cotasJaPagas)
-                    
-                    let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))                
-                    
-                    let missing = checkMissing( this.value, this.cotasJaPagas)
-                    this.missingCotasOnUpdate = missing;
-
-                    if(!checkOldRegistration){
-                        
-                        if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
-                                                        
-                            this.updateSocioRecord(this.value)
-                            this.backToSocioList();
-
-                        }
-
-                    }  else {
-                     
-                        this.updateSocioRecord(this.value)
-                        this.backToSocioList();
-                    }
-
-                }
+               alert('cotas submit form')
 
 
             }
@@ -790,34 +952,45 @@
 
                          this.spinnerLoadingSociosTable = false;
                     });  
+            }   
+            
+            , getAllPacks(){
+                 firebasedatabase
+                    .collection('/packs')
+                    .onSnapshot((snapshot) => {
+                       this.packList_Socio = [];
+                       this.packList_Socio.push({
+                            value : null
+                            , text : "Escolher pack"
+                            , disabled: true 
+                        })
+                       snapshot.forEach((doc) => {
+                           this.packList_Socio.push({
+                                value   : doc.id,
+                                text    : doc.data().nome + ' (' + doc.data().preco + ' €)',    
+                                preco   : doc.data().preco                            
+                           })
+                       })            
+
+                    })
             }
 
-
-            , getCotas(){
+            , getAllCotas(){
                 firebasedatabase
                     .collection('/cotas')
                     .onSnapshot((snapShot) => {
-                        this.cotasAbertas = [];
+                        this.cotasAbertasObjecto = [];
                         snapShot.forEach((doc) => { 
                             
-                            this.cotasAbertasObjecto = doc.data();                           
-
-                            //Mostrar apenas os anos seguinte a data de criação do user
-                            if (doc.data().ano >=  this.socioByID.criadoaYear){
-                                this.options.push (
-                                    doc.data().ano
-                                )
-                            }
-                            
-                            this.options.sort();
-
-                            // TAGS ABERTAS (POSSIVEIS ANOS QUE PODEMOS REGISTAR)
-                            this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea) );
+                            this.cotasAbertasObjecto = doc.data();    
                             
                         })
                     })
             }
-            
+
+
+
+
 
 
             // :::: MODAL'S
@@ -834,7 +1007,6 @@
                 this.close_Modal('modal-Socio')
                 this.clean_SocioModal();
             }
-
 
             , show_Modal(modalID){
                 this.$bvModal.show(modalID);
@@ -883,6 +1055,7 @@
 
                 this.automaticallySocioNumberModal();
             }
+
             , cleanFull_SocioModal(){
                 this.socioModal_action = 'new'
                 this.socioKey_edit = ''
@@ -902,7 +1075,6 @@
 
                 this.automaticallySocioNumberModal();
             }
-
 
             // :::: VALIDATION's
             ,  validateNIF(value) {
@@ -1020,13 +1192,92 @@
 
 
 
-            , GoToXXX(keyyy, sNome, sCotas){
-                 this.xptoTest = keyyy
-                 this.xptoTestName = sNome;
-                 this.xptoTestCotas = sCotas;
+            , GoToCotas(keyyy, sN, sNome, sPack, sCotas, sCriadoa){
+                
 
-                this.$bvModal.show('modal-XXX');
+                this.socioModal_action = 'cotas';
+
+                console.log( 
+                            keyyy + '|' +
+                            sN + '|' +
+                            sNome + '|' +
+                            sPack + '|' +
+                            sCotas + '|' +
+                            sCriadoa + '|' 
+                
+                )
+
+
+                let socioCriadoA_year = (new Date(sCriadoa).getFullYear());
+                this.socioByID.criadoaYear = socioCriadoA_year;
+
+
+                this.socioByID.key = keyyy;
+                this.socioByID.socioN = sN;
+                this.socioByID.nome = sNome;
+                this.socioByID.packKey = sPack;
+                this.socioByID.cotas = sCotas;
+
+
+                //set default values
+                this.value = sCotas;
+                this.valueVarient = 'success';
+
+                
+                //Correct years
+                this.cotasAbertas = [];
+                this.options = [];
+
+                this.cotasAbertasObjecto.forEach((doc) =>{
+
+                    if(doc.data().ano >= socioCriadoA_year){
+                        this.options.push(
+                            doc.data().ano
+                        )
+                    }
+                }) ;
+                
+                this.options.sort();
+
+                
+                this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea))
+                
+                
+                console.log(JSON.stringify(this.options))
+
+
+
+
+                 let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
+
+                this.socioByID.packNomePreco = packByKey[0].text
+                this.socioByID.packPreco = packByKey[0].preco
+
+
+
+                console.log(JSON.stringify(sCotas))
+
+                // this.$bvModal.show('modal-XXX');
+                this.show_Modal('modal-Cotas');
             }
+
+
+            , getCotas(){
+                firebasedatabase
+                    .collection('/cotas')
+                    .onSnapshot((snapShot) => {
+                        this.cotasAbertasObjecto = [];                        
+                        this.cotasAbertasObjecto = snapShot;
+
+                    })
+            }
+
+
+            , onOptionClick({ option, addTag }) {
+                addTag(option)
+                this.search = ''
+            }
+           
 
             
         }//METHODS
@@ -1043,28 +1294,18 @@
 
         , created() {
                 
+                // get all os partenrs
                 this.getListOfSocios();
+                
+
+                // GET ALL PACKS
+                this.getAllPacks();
 
                 // this.spinnerLoadingSociosTable = false;
                 
-                // Get ALL PACKs
-                    firebasedatabase
-                    .collection('/packs')
-                    .onSnapshot((snapshot) => {
-                       this.packList_Socio = [];
-                       this.packList_Socio.push({
-                            value : null
-                            , text : "Escolher pack"
-                            , disabled: true 
-                        })
-                       snapshot.forEach((doc) => {
-                           this.packList_Socio.push({
-                                value   : doc.id,
-                                text    : doc.data().nome + ' (' + doc.data().preco + ' €)',                                
-                           })
-                       })            
-
-                    })
+                // Get ALL YEARS
+                this.getCotas();
+               
                
            
         }//CREATED
