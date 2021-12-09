@@ -175,9 +175,13 @@
 
                  </b-alert>
 
+              
+                 
+
                 <form @submit.prevent="onSocioModelFormSubmit" >
                     
                     <div class="form-group">
+                        
 
                         <b-input-group size="sm"  prepend="Numero Sócio (possivel) ">
                             <b-spinner size="sm" v-if="loadingSpinnerSocioNumber" ></b-spinner>
@@ -387,6 +391,10 @@
                 hide-header-close
             >
 
+
+                 
+
+
                 <form @submit.prevent="onRegistaEditaCotaFormSubmit" >
                     
                     <div class="form-group">
@@ -417,18 +425,23 @@
                     </div>   
                     
 
-                     <b-alert show variant="warning" v-if="checkTagsJaPagasMasRemovidas.length > 0">
-                            <span> 
-                                Cota(s) já paga(s) mas removida(s) <br>
-                                <li v-for="(item, index) in checkTagsJaPagasMasRemovidas" v-bind:key="index">{{item}}</li>
-                            </span>
-                        </b-alert>
+                    
 
 
 
 
                     <div class="form-group">
-                            
+                        
+                        
+                        
+                        <b-alert show variant="warning" v-if="checkTagsJaPagasMasRemovidas.length > 0">
+                            <span> 
+                                Cota(s) já paga(s) mas removida(s) <br>
+                                <li v-for="(item, index) in checkTagsJaPagasMasRemovidas" v-bind:key="index">{{item}}</li>
+                            </span>
+                        </b-alert> 
+
+
                             <b-form-group 
                                 :label="checkLableCotasJaPagas" 
                                 label-for="tags-with-dropdown"
@@ -497,6 +510,26 @@
 
 
                     </div>
+
+                    <div class="form-group">                                   
+                        
+                        <b-button 
+                            variant="warning" 
+                            class="mt-1" 
+                            block 
+                            type="submit"
+                        >    
+                            <span>Adic. Cota(s)</span>
+                            
+                        </b-button>
+                        
+                        
+                        <b-button class="mt-1" block @click="modalSocioCotasClose">Fechar</b-button>
+                       
+
+                    </div> 
+
+
 
 
 
@@ -900,7 +933,36 @@
 
             , onRegistaEditaCotaFormSubmit(){
                 
-               alert('cotas submit form')
+                if (window.confirm("Quer mesmo adicioncar as cotas como Pagas?\n " + this.value)){
+                    
+                    let checker = (arr, target) => target.every(v => arr.includes(v));
+                    let checkOldRegistration = checker(this.value, this.cotasJaPagas)
+                    
+                    let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))                
+                    
+                    let missing = checkMissing( this.value, this.cotasJaPagas)
+                    this.missingCotasOnUpdate = missing;
+
+                    if(!checkOldRegistration){
+                        
+                        if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
+                                                        
+                            this.updateSocioRecord(this.value)
+                            // this.backToSocioList();
+                            this.modalSocioCotasClose()
+
+                        }
+
+                    }  else {
+                     
+                        this.updateSocioRecord(this.value)
+                        // this.backToSocioList();
+                        this.modalSocioCotasClose()
+                    }
+
+                }
+
+
 
 
             }
@@ -1190,7 +1252,9 @@
 
             }
 
-
+            , modalSocioCotasClose(){
+                this.close_Modal('modal-Cotas')
+            }
 
             , GoToCotas(keyyy, sN, sNome, sPack, sCotas, sCriadoa){
                 
@@ -1224,6 +1288,7 @@
                 this.valueVarient = 'success';
 
                 
+                
                 //Correct years
                 this.cotasAbertas = [];
                 this.options = [];
@@ -1239,7 +1304,7 @@
                 
                 this.options.sort();
 
-                
+                this.cotasJaPagas = sCotas;
                 this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea))
                 
                 
