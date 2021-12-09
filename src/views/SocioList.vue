@@ -970,7 +970,7 @@
             , updateSocioRecord(socioCotas){
                  firebasedatabase
                     .collection('/Socio')
-                    .doc(this.$route.params.id)
+                    .doc(this.socioByID.key)
                     .update({
                         cotas : socioCotas
                     })
