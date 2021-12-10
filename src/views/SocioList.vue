@@ -95,19 +95,31 @@
                             <b-icon size="sm" icon="cash"></b-icon>                            
                         </router-link>  -->
 
-                        <b-button  size="sm" @click="$router.push({name : 'saveSocioCota' , params : { id : props.row.key}})" variant="warning">                     
-                            <b-icon icon="cash"></b-icon>   
-                        </b-button>
+                        <!-- <b-button  size="sm" @click="$router.push({name : 'saveSocioCota' , params : { id : props.row.key}})" variant="warning">                     
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" 
+                                                                    height="18" 
+                                                                    fill="currentColor" 
+                                                                    class="bi bi-currency-euro" 
+                                                                    viewBox="0 0 18 18">
+                                <path d="M4 9.42h1.063C5.4 12.323 7.317 14 10.34 14c.622 0 1.167-.068 1.659-.185v-1.3c-.484.119-1.045.17-1.659.17-2.1 0-3.455-1.198-3.775-3.264h4.017v-.928H6.497v-.936c0-.11 0-.219.008-.329h4.078v-.927H6.618c.388-1.898 1.719-2.985 3.723-2.985.614 0 1.175.05 1.659.177V2.194A6.617 6.617 0 0 0 10.341 2c-2.928 0-4.82 1.569-5.244 4.3H4v.928h1.01v1.265H4v.928z"/>
+                            </svg> 
+                        </b-button> -->
 
-                        <b-button  size="sm" @click.prevent="GoToCotas  (props.row.key, 
+                        <b-button  size="sm" @click.prevent="GoToCotas( props.row.key, 
                                                                         props.row.socioN, 
                                                                         props.row.nome, 
                                                                         props.row.pack,
                                                                         props.row.cotas,
-                                                                        props.row.criadoa
-                                                                        
-                                                                        )">                     
-                            <b-icon icon="circle"></b-icon>   
+                                                                        props.row.criadoa                                                                        
+                                                                        )"
+                                    variant="warning">                     
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" 
+                                                                    height="18" 
+                                                                    fill="currentColor" 
+                                                                    class="bi bi-currency-euro" 
+                                                                    viewBox="0 0 18 18">
+                                <path d="M4 9.42h1.063C5.4 12.323 7.317 14 10.34 14c.622 0 1.167-.068 1.659-.185v-1.3c-.484.119-1.045.17-1.659.17-2.1 0-3.455-1.198-3.775-3.264h4.017v-.928H6.497v-.936c0-.11 0-.219.008-.329h4.078v-.927H6.618c.388-1.898 1.719-2.985 3.723-2.985.614 0 1.175.05 1.659.177V2.194A6.617 6.617 0 0 0 10.341 2c-2.928 0-4.82 1.569-5.244 4.3H4v.928h1.01v1.265H4v.928z"/>
+                            </svg> 
                         </b-button>
 
 
@@ -385,15 +397,11 @@
             <!-- MODAL FOR COTAS -->
             <b-modal 
                 id="modal-Cotas" 
-                title="Cotas" 
+                :title="ModalCotas_title" 
                 button-size="sm"
                 hide-footer
                 hide-header-close
             >
-
-
-                 
-
 
                 <form @submit.prevent="onRegistaEditaCotaFormSubmit" >
                     
@@ -662,6 +670,8 @@
                 
                 // ---modal cotas
                 , socioByID : []
+                
+
 
                 , cotasAbertas : []
                 , cotasAbertasObjecto : []
@@ -758,6 +768,9 @@
             // :: END COTAS MODAL
 
 
+            , ModalCotas_title() {
+                return this.socioModal_action=='cotas'?this.socioByID.nome:''
+            }
         
 
         }//COMPUTED
@@ -948,7 +961,6 @@
                         if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
                                                         
                             this.updateSocioRecord(this.value)
-                            // this.backToSocioList();
                             this.modalSocioCotasClose()
 
                         }
@@ -956,9 +968,14 @@
                     }  else {
                      
                         this.updateSocioRecord(this.value)
-                        // this.backToSocioList();
                         this.modalSocioCotasClose()
                     }
+
+
+                    // show alert with the cotas message
+                    this.bAlertVariantSocioList = 'warning'
+                    this.bAlertMessageShowSocioList = missing.length==0?"Cota(s) actualizadas no socio " + this.socioByID.nome:'Cota(s) removida no socio ' + this.socioByID.nome
+                    this.showBAlertSocioList();
 
                 }
 
@@ -1100,6 +1117,7 @@
             // :::: CLEAN
             , clean_SocioModal(){
                 this.socioModal_action = 'new'
+                this.dismissAlertSocioSecs = 3
                 this.socioKey_edit = ''
                 this.loadingSpinnerSocioNumber = true
                         
@@ -1120,6 +1138,7 @@
 
             , cleanFull_SocioModal(){
                 this.socioModal_action = 'new'
+                this.dismissAlertSocioSecs = 3
                 this.socioKey_edit = ''
                 this.loadingSpinnerSocioNumber = true
                         
@@ -1260,16 +1279,16 @@
                 
 
                 this.socioModal_action = 'cotas';
-
-                console.log( 
-                            keyyy + '|' +
-                            sN + '|' +
-                            sNome + '|' +
-                            sPack + '|' +
-                            sCotas + '|' +
-                            sCriadoa + '|' 
                 
-                )
+                // console.log( 
+                //             keyyy + '|' +
+                //             sN + '|' +
+                //             sNome + '|' +
+                //             sPack + '|' +
+                //             sCotas + '|' +
+                //             sCriadoa + '|' 
+                
+                // )
 
 
                 let socioCriadoA_year = (new Date(sCriadoa).getFullYear());
@@ -1308,22 +1327,32 @@
                 this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea))
                 
                 
-                console.log(JSON.stringify(this.options))
+                // console.log(JSON.stringify(this.options))
 
 
+                let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
 
+                // verify if package exist ( this is  a mandatory field, because without package we are not able to add cotas)                
+                if (packByKey.length != 0){
 
-                 let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
-
-                this.socioByID.packNomePreco = packByKey[0].text
-                this.socioByID.packPreco = packByKey[0].preco
-
-
-
-                console.log(JSON.stringify(sCotas))
-
-                // this.$bvModal.show('modal-XXX');
-                this.show_Modal('modal-Cotas');
+                    this.socioByID.packNomePreco = packByKey[0].text
+                    this.socioByID.packPreco = packByKey[0].preco
+    
+    
+    
+                    // console.log(JSON.stringify(sCotas))
+    
+                    // this.$bvModal.show('modal-XXX');
+                    this.show_Modal('modal-Cotas');
+                
+                
+                }else{
+                    this.dismissAlertSocioSecs = 5
+                    this.bAlertVariantSocioList = 'danger'
+                    this.bAlertMessageShowSocioList = 'Sócio não tem nenhum pacote associado. Verifique os campos do mesmo.'
+                    this.showBAlertSocioList();
+                }
+                
             }
 
 
