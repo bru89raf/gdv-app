@@ -1,6 +1,6 @@
 <template>
     
-     <div>
+    <div>
 
         <b-spinner 
             style="width: 3rem; height: 3rem;" 
@@ -23,7 +23,6 @@
 
             </b-alert>
             
-
             <vue-good-table
                 :columns="columns"
                 :rows="rows"
@@ -563,7 +562,7 @@
 
         </down-list-socio> -->
 
-     </div>
+    </div>
 
 </template>
 
@@ -659,7 +658,6 @@
                 , originalSocioN : ''
                 , statusInsertNextSocio : false
 
-                
                 , bAlertVariantSocioList_modal : ''
                 , dismissAlertCountDownSuccessSocioList_modal : 0
                 , bAlertMessageShowSocioList_modal : ''
@@ -669,9 +667,7 @@
 
                 
                 // ---modal cotas
-                , socioByID : []
-                
-
+                , socioByID : []              
 
                 , cotasAbertas : []
                 , cotasAbertasObjecto : []
@@ -679,7 +675,6 @@
                 
                 , cotasJaPagas : []
                 , tagsCotasJaPagas : []
-                
 
                 , value : []  //alterar o nome para valueCotasOagas
                 , valueVarient : '' //COLOR of Labels
@@ -688,8 +683,6 @@
 
                 , options: []
                 // ---/modal cotas
-
-
 
             }
         }//DATA
@@ -823,9 +816,7 @@
                                 this.bAlertMessageShowSocioList = 'Sócio removido com sucesso!'
                                 this.showBAlertSocioList();
 
-                                // this.updateListOfNumbersAfterDelete();
-
-                                
+                                // this.updateListOfNumbersAfterDelete();                              
                                 
                             })
                             .catch((error) => {
@@ -892,7 +883,6 @@
                     })
             }
 
-
             , firebase_updateSocio() {
                
                 if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
@@ -941,8 +931,7 @@
 
 
 
-            }
-            
+            }            
 
             , onRegistaEditaCotaFormSubmit(){
                 
@@ -1066,9 +1055,6 @@
                         })
                     })
             }
-
-
-
 
 
 
@@ -1275,27 +1261,16 @@
                 this.close_Modal('modal-Cotas')
             }
 
-            , GoToCotas(keyyy, sN, sNome, sPack, sCotas, sCriadoa){
+            , GoToCotas(sKey, sN, sNome, sPack, sCotas, sCriadoa){
                 
 
                 this.socioModal_action = 'cotas';
                 
-                // console.log( 
-                //             keyyy + '|' +
-                //             sN + '|' +
-                //             sNome + '|' +
-                //             sPack + '|' +
-                //             sCotas + '|' +
-                //             sCriadoa + '|' 
-                
-                // )
-
-
                 let socioCriadoA_year = (new Date(sCriadoa).getFullYear());
                 this.socioByID.criadoaYear = socioCriadoA_year;
 
 
-                this.socioByID.key = keyyy;
+                this.socioByID.key = sKey;
                 this.socioByID.socioN = sN;
                 this.socioByID.nome = sNome;
                 this.socioByID.packKey = sPack;
@@ -1308,32 +1283,34 @@
 
                 
                 
-                //Correct years
-                this.cotasAbertas = [];
-                this.options = [];
-
-                this.cotasAbertasObjecto.forEach((doc) =>{
-
-                    if(doc.data().ano >= socioCriadoA_year){
-                        this.options.push(
-                            doc.data().ano
-                        )
-                    }
-                }) ;
-                
-                this.options.sort();
-
-                this.cotasJaPagas = sCotas;
-                this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea))
-                
-                
-                // console.log(JSON.stringify(this.options))
-
-
-                let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
-
                 // verify if package exist ( this is  a mandatory field, because without package we are not able to add cotas)                
+                let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
                 if (packByKey.length != 0){
+                    //Correct years
+                    this.cotasAbertas = [];
+                    this.options = [];
+
+                    this.cotasAbertasObjecto.forEach((doc) =>{
+
+                        if(doc.data().ano >= socioCriadoA_year){
+                            this.options.push(
+                                doc.data().ano
+                            )
+                        }
+                    }) ;
+                    
+                    this.options.sort();
+
+                    this.cotasJaPagas = sCotas;
+                    this.tagsCotasAbertas = this.cotasAbertas.filter(yea => !this.cotasJaPagas.includes(yea))
+                    
+                    
+                    // console.log(JSON.stringify(this.options))
+
+
+                    
+
+
 
                     this.socioByID.packNomePreco = packByKey[0].text
                     this.socioByID.packPreco = packByKey[0].preco
@@ -1390,12 +1367,9 @@
                 
                 // get all os partenrs
                 this.getListOfSocios();
-                
 
                 // GET ALL PACKS
                 this.getAllPacks();
-
-                // this.spinnerLoadingSociosTable = false;
                 
                 // Get ALL YEARS
                 this.getCotas();
