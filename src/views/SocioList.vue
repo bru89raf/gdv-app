@@ -881,9 +881,6 @@
                     .add(this.socioModal)
                     .then(() =>{
                         
-                       
-
-
                         if (!this.statusInsertNextSocio){
                             
                             this.statusInsertNextSocio = false;
@@ -893,7 +890,6 @@
                             this.bAlertMessageShowSocioList = 'Socio(' + vSname + ') adicionado com sucesso!'
                             this.showBAlertSocioList();
                             
-                        
                         }else{
                             
                             this.bAlertVariantSocioList_modal = 'success'
