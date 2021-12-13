@@ -874,13 +874,14 @@
 
                 this.socioModal.cotas = []
              
+                let vSname = this.socioModal.nome
 
                 firebasedatabase
                     .collection('/Socio')
                     .add(this.socioModal)
                     .then(() =>{
                         
-                        this.clean_SocioModal();
+                       
 
 
                         if (!this.statusInsertNextSocio){
@@ -889,27 +890,19 @@
                             this.modalSocioClose();
                             
                             this.bAlertVariantSocioList = 'success'
-                            this.bAlertMessageShowSocioList = 'Socio adicionado com sucesso!'
+                            this.bAlertMessageShowSocioList = 'Socio(' + vSname + ') adicionado com sucesso!'
                             this.showBAlertSocioList();
                             
                         
                         }else{
                             
                             this.bAlertVariantSocioList_modal = 'success'
-                            this.bAlertMessageShowSocioList_modal = 'Sócio ADICIONADO com sucesso!'                            
+                            this.bAlertMessageShowSocioList_modal = 'Socio(' + vSname + ') adicionado com sucesso!'                         
                             this.showBAlertSocioList_modal();
 
                         }
                         
-                        // GET NEXT SOCIO NUMBER
-                        //this.loadingSpinnerSocioNumber = true;
-                        // this.getLastSocioNumber2();
-                        //this.testNumberSocio();
-
-
-                        // este warning/messagem so aparece quando inserimos mais do que um.
-                        //this.bAlertMessageShow = 'Socio adicionado com sucesso!'
-                        //this.showAlertOnSocios()
+                         this.clean_SocioModal();
 
                     })
                     .catch((error) =>{
