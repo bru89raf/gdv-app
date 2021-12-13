@@ -84,7 +84,10 @@
                                                                 props.row.contacto,
                                                                 props.row.email,
                                                                 props.row.aniversario,
-                                                                props.row.pack )" 
+                                                                props.row.pack,
+                                                                props.row.cotas,
+                                                                props.row.criadoa,
+                                                                )" 
                                     size="sm" variant="primary" class="btn">
                             <b-icon icon="pencil"></b-icon>  
                         </b-button> 
@@ -112,11 +115,12 @@
                                                                         props.row.criadoa                                                                        
                                                                         )"
                                     variant="warning">                     
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" 
-                                                                    height="18" 
-                                                                    fill="currentColor" 
-                                                                    class="bi bi-currency-euro" 
-                                                                    viewBox="0 0 18 18">
+                            <svg    xmlns="http://www.w3.org/2000/svg" 
+                                    width="18" 
+                                    height="18" 
+                                    fill="currentColor" 
+                                    class="bi bi-currency-euro" 
+                                    viewBox="0 0 18 18">
                                 <path d="M4 9.42h1.063C5.4 12.323 7.317 14 10.34 14c.622 0 1.167-.068 1.659-.185v-1.3c-.484.119-1.045.17-1.659.17-2.1 0-3.455-1.198-3.775-3.264h4.017v-.928H6.497v-.936c0-.11 0-.219.008-.329h4.078v-.927H6.618c.388-1.898 1.719-2.985 3.723-2.985.614 0 1.175.05 1.659.177V2.194A6.617 6.617 0 0 0 10.341 2c-2.928 0-4.82 1.569-5.244 4.3H4v.928h1.01v1.265H4v.928z"/>
                             </svg> 
                         </b-button>
@@ -448,6 +452,27 @@
                             </span>
                         </b-alert> 
 
+                        <span v-if="valoraPagar > 0">
+                        
+                            <div class="form-group">
+                                <b-row class="my-1">
+                                    <!-- <b-col sm="5">
+                                    <label for="input-default">Valor a pagar:</label>
+                                    </b-col> -->
+                                    <b-col sm="10">
+                                        <fieldset disabled>
+                                            <b-input-group size="sm" prepend="Valor a pagar" append="€" >
+                                                <b-form-input v-model="valoraPagar" :state="true" style="bold">
+                                                </b-form-input>
+                                            </b-input-group>
+                                           
+                                        </fieldset>                            
+                                    </b-col>
+                                </b-row>
+                            </div>
+
+                        </span>
+
 
                             <b-form-group 
                                 :label="checkLableCotasJaPagas" 
@@ -518,6 +543,15 @@
 
                     </div>
 
+                
+
+
+
+
+
+
+
+
                     <div class="form-group">                                   
                         
                         <b-button 
@@ -536,6 +570,8 @@
 
                     </div> 
 
+
+                    
 
 
 
@@ -764,6 +800,15 @@
             , ModalCotas_title() {
                 return this.socioModal_action=='cotas'?this.socioByID.nome:''
             }
+
+            , valoraPagar(){
+                let lenghtCotasJaPagas = this.cotasJaPagas.length;
+                let lenghtNewCotas = this.value.length ;
+                let totalPrice = (lenghtNewCotas - lenghtCotasJaPagas) * this.socioByID.packPreco;
+                return totalPrice.toFixed(2);
+
+
+            }
         
 
         }//COMPUTED
@@ -779,7 +824,7 @@
 
             // :::: CREATE , UPDATES AND DELETES
 
-            , editSocio(vKey, vSocion, vNome, vMorada, vNIF, vContacto, vEmail, vAniv, vPack){
+            , editSocio(vKey, vSocion, vNome, vMorada, vNIF, vContacto, vEmail, vAniv, vPack, vCotas, vCriadoa){
                 
                 this.socioModal_action = 'update'
                 this.socioKey_edit = vKey;
@@ -794,6 +839,10 @@
                 this.socioModal.email = vEmail
                 this.socioModal.aniversario = vAniv
                 this.socioModal.pack = vPack
+                
+                // data not enable on page, but we need to save it
+                this.socioModal.criadoa = vCriadoa
+                this.socioModal.cotas = vCotas
 
 
                 this.$bvModal.show('modal-Socio')
@@ -835,6 +884,7 @@
                 var yy = d.getFullYear()
                 var mm2 = mm>9?mm:'0'+mm;
                 var dateF = yy + '-' + mm2 + '-' + dd;                
+                
                 this.socioModal.criadoa = dateF;
 
 
