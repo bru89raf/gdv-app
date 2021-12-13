@@ -544,14 +544,6 @@
                     </div>
 
                 
-
-
-
-
-
-
-
-
                     <div class="form-group">                                   
                         
                         <b-button 
@@ -587,11 +579,6 @@
 
         </div>
 
-        <!-- <b-button pill variant="success" @click.prevent="GoToXXX()">
-                <b-icon icon="plus-circle-fill" ></b-icon> 
-        </b-button>  -->
-
-        <!-- <PagarCotas :socioKey="xptoTest"  :socioNome="xptoTestName" :socioCoyas="xptoTestCotas"/>  -->
 
         <!-- SIDE BAR -->
         <!-- <down-list-socio >
@@ -606,7 +593,7 @@
     import { firebasedatabase } from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
-    // import PagarCotas from '@/components/PagarCotas.vue'
+    
     
     
     export default {
@@ -621,10 +608,6 @@
                 , dismissAlertSocioSecs : 3
                 , dismissAlertCountDownSuccessSocioList : 0
                 
-
-                , xptoTest : ''
-                , xptoTestName : ''
-                , xptoTestCotas : []
 
                , columns: [
                     {
@@ -757,6 +740,7 @@
                 return this.checkPackSocioModalValidation();
             }
 
+            
             // :: COTAS MODAL
             
             , criteria(){
@@ -1407,7 +1391,6 @@
         
         , components : {
             VueGoodTable
-            // , PagarCotas
             
         }//COMPONENTS
         
