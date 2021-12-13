@@ -1319,7 +1319,8 @@
                 
                 // verify if package exist ( this is  a mandatory field, because without package we are not able to add cotas)                
                 let packByKey = this.packList_Socio.filter(item => `${item.value}`.includes(sPack.toString()))
-                if (packByKey.length != 0){
+                
+                if (packByKey.length != 0 && sCriadoa.length != 0){
                     //Correct years
                     this.cotasAbertas = [];
                     this.options = [];
@@ -1358,10 +1359,19 @@
                 
                 
                 }else{
+                    
                     this.dismissAlertSocioSecs = 5
                     this.bAlertVariantSocioList = 'danger'
-                    this.bAlertMessageShowSocioList = 'Sócio não tem nenhum pacote associado. Verifique os campos do mesmo.'
+
+                    if (packByKey.length == 0){
+                        this.bAlertMessageShowSocioList = 'Sócio não tem nenhum pacote associado. Verifique os campos do mesmo.'
+                    }else{
+                        this.bAlertMessageShowSocioList = 'Consulte o administrador do site. Anote o numero de sócio ou nome do sócio.'
+                        console.log('VALIDATION:: Problem with \'criadoa\' field. Maybe the field is empty (sN : ' + this.socioByID.socioN +').')
+                    }
+
                     this.showBAlertSocioList();
+                    
                 }
                 
             }
