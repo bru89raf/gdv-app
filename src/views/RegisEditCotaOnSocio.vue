@@ -118,7 +118,8 @@
                                     </b-dropdown>
                                     </template>
                                 </b-form-tags>
-                        </b-form-group>
+                            
+                            </b-form-group>
 
 
                         </div>

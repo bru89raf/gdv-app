@@ -552,8 +552,8 @@
                             block 
                             type="submit"
                         >    
-                            <span>Adic. Cota(s)</span>
-                            
+                            <span v-if="checkTagsJaPagasMasRemovidas.length == 0">Adicionar Cota(s)</span>
+                            <span v-if="checkTagsJaPagasMasRemovidas.length > 0" style="color : red">Atualizar Cota(s)</span>
                         </b-button>
                         
                         
