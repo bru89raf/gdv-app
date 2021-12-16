@@ -5,10 +5,10 @@
       Aplicação para gerir as cotas dos sócios.<br>
     </p>
 
-    <h3>Menu Rapido</h3>
+    <h3>Menu rápido</h3>
     
     <ul>
-      <li><a href="/socioList" rel="noopener">Socios</a></li>
+      <li><a href="/socioList" rel="noopener">Sócios</a></li>
       <li><a href="/pacotesList" rel="noopener">Packs</a></li>
       <li><a href="/cotasList" rel="noopener">Cotas (anos abertos)</a></li>
     </ul>

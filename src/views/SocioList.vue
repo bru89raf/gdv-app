@@ -148,7 +148,7 @@
                                 triggers="hover"
                             >
                                 <div>
-                                    <strong>Socio N.</strong>: {{props.row.socioN}}<br>
+                                    <strong>Sócio N.</strong>: {{props.row.socioN}}<br>
                                     <strong>Email</strong>: {{props.row.email}}<br>
                                     <strong>Morada</strong>: {{props.row.morada}}<br>
                                     <strong>NIF</strong>: {{props.row.nif}}<br>
