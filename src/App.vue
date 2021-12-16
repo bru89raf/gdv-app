@@ -49,6 +49,12 @@
 }
 
 
+.tableList {
+  width: 96%;
+  padding-left: 2%;
+}
+
+
 
 
 

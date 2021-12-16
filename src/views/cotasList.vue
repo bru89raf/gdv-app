@@ -11,43 +11,12 @@
 
 
         <div v-if="!spinnerLoadingCotasTable">
-            <div>
-                <b-modal 
-                    id="modalNovaCota"
-                    v-model="modalShow"
-                    title="Abrir nova Cota"
-                    @show="resetModal"
-                    @hidden="resetModal"
-                    @ok="handleOk"
-                >
-                    <form ref="form" @submit.stop.prevent="handleSubmit">
-                        <div class="form-group">
-                            <label for="novaCota">Cota</label>
-                            <b-form-input 
-                                id="novaCota"
-                                v-model="novaCota.ano" 
-                                placeholder="Ano" 
-                                type="number"
-                                required
-                                :min="minCotaAberta"
-                                :max="maxCotaAberta"
-                                :state="anoValidation"
-                                
-                            ></b-form-input>
-
-                            <!-- <span v-if="checkInputAnoMessage == false">Ano já se encontra aberto </span> -->
-
-                        </div>
-                    </form>
-                
-                
-                </b-modal>            
-            </div>
-
-
+            
+ 
 
             
-            <div class="col-sm-5 offset-sm-3">               
+            <!-- <div class="col-sm-5 offset-sm-3">                -->
+            <div  class="tableList" >               
 
                     <b-alert
                         id="b-alert-Cotas"
@@ -105,6 +74,45 @@
 
                 </vue-good-table>
             </div>
+            
+
+            <!-- ::: MODAL INSERT COTA -->
+            <b-modal 
+                id="modalNovaCota"
+                v-model="modalShow"
+                title="Abrir nova Cota"
+                @show="resetModal"
+                @hidden="resetModal"
+                @ok="handleOk"
+            >
+                <form ref="form" @submit.stop.prevent="handleSubmit">
+                    <div class="form-group">
+                        <label for="novaCota">Cota</label>
+                        <b-form-input 
+                            id="novaCota"
+                            v-model="novaCota.ano" 
+                            placeholder="Ano" 
+                            type="number"
+                            required
+                            :min="minCotaAberta"
+                            :max="maxCotaAberta"
+                            :state="anoValidation"
+                            
+                        ></b-form-input>
+
+                        <span v-if="novaCota.ano < minCotaAberta && novaCota.ano.length!=0 ">Cota minima é o ano de {{minCotaAberta}}. </span>
+                        <span v-else-if="novaCota.ano > maxCotaAberta && novaCota.ano.length!=0 ">Cota maxima é o ano de {{maxCotaAberta}}. </span>
+                        <span v-else-if="!anoValidation && novaCota.ano.length!=0">Cota já se encontra inserida.</span>
+
+                    </div>
+                </form>
+            
+            
+            </b-modal>   
+            <!-- ::: END MODAL INSERT COTA -->
+
+
+
 
         </div>
 
@@ -296,5 +304,10 @@
 </script>
 
 <style lang="scss" scoped>
+    
+    .tableList2 {
+        width: 96%;
+        padding-left: 2%;
+        }
 
 </style>

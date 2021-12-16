@@ -1,6 +1,6 @@
 <template>
     
-    <div>
+    <div class="tableList" >
 
         <b-spinner 
             style="width: 3rem; height: 3rem;" 
@@ -420,7 +420,8 @@
                             >
                             </b-form-input>   
                          </b-input-group>   
-                    </div>   
+                    </div>  
+
                     <div class="form-group">
                         <b-input-group size="sm"  prepend="Pacote">
                             <b-form-input
@@ -435,12 +436,6 @@
                         </b-input-group>   
                     </div>   
                     
-
-                    
-
-
-
-
                     <div class="form-group">
                         
                         
@@ -459,7 +454,7 @@
                                     <!-- <b-col sm="5">
                                     <label for="input-default">Valor a pagar:</label>
                                     </b-col> -->
-                                    <b-col sm="10">
+                                    <b-col sm="6">
                                         <fieldset disabled>
                                             <b-input-group size="sm" prepend="Valor a pagar" append="€" >
                                                 <b-form-input v-model="valoraPagar" :state="true" style="bold">
@@ -477,6 +472,7 @@
                             <b-form-group 
                                 :label="checkLableCotasJaPagas" 
                                 label-for="tags-with-dropdown"
+                                style="text-align:center"
                             >
                                 
                                 <b-form-tags id="tags-with-dropdown" v-model="value" no-outer-focus class="mb-2">
@@ -542,7 +538,6 @@
 
 
                     </div>
-
                 
                     <div class="form-group">                                   
                         
@@ -561,9 +556,7 @@
                        
 
                     </div> 
-
-
-                    
+            
 
 
 

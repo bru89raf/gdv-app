@@ -1,6 +1,6 @@
 <template>
     
-    <div>
+    <div class="tableList" >
         
         <b-spinner 
             style="width: 3rem; height: 3rem;" 
