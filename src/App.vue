@@ -7,6 +7,8 @@
     <div id="nav"></div>
     
     <router-view/>
+
+    <sibeBarReportIssueOrImprove></sibeBarReportIssueOrImprove>
   
   </div>
 </template>
@@ -14,10 +16,12 @@
 
 <script>
   import Header from "./components/Top-Header.vue";
+  import Report from "./components/ReportIssue.vue"
   
   export default {
     components: {
-        'top-header' : Header
+        'top-header' : Header , 
+        'sibeBarReportIssueOrImprove' : Report
     }  
   }
 </script>

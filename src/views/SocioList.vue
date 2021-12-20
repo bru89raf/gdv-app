@@ -45,6 +45,7 @@
                         , ofLabel: 'de'
                         , allLabel: 'Todos'
                     }"   
+                    compactMode
                 >
 
 

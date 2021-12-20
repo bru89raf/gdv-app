@@ -13,7 +13,12 @@
       <li><a href="/cotasList" rel="noopener">Cotas (anos abertos)</a></li>
     </ul>
 
-      <h3>Redes Sociais</h3>
+    <h3>Reportar error ou melhoramento</h3>
+    <b-button pill variant="outline-danger" v-b-toggle.sidebarReport>
+      Reportar
+    </b-button>
+    
+    <h3>Redes Sociais</h3>
     <ul>
       <li><a href="https://www.facebook.com/GrupoDesportivoDeValverde" target="_blank" rel="noopener"> <b-icon icon="facebook" font-scale="2"></b-icon> </a></li>
       
