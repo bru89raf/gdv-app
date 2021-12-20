@@ -9,7 +9,14 @@
     
     
     <div>
-        <b-sidebar id="sidebarReport" title="Reportar" shadow>
+        <b-sidebar 
+            ref="refSidebarReport"  
+            id="sidebarReport" 
+            title="Reportar" 
+            shadow
+            backdrop-variant="dark"
+            backdrop
+            >
             <!-- <div class="px-3 py-2">
                 <p>                
                    Reportar correção ou melhoria
@@ -26,6 +33,7 @@
                 <form @submit.prevent="sendEmail" >
                     
                      <div class="form-group">
+
                             <b-input-group size="sm"  prepend="Tipo">
                                 <b-form-select 
                                     v-model="report.issueOrImprovment" 
@@ -123,30 +131,30 @@
                     {
                         label : 'Sócios',
                         options : [
-                            {value : 'SocioList', text: '- Lista de Sócios'},
-                            {value : 'SocioNew', text: '- Novo Sócio'},
-                            {value : 'SocioUpdate', text: '- Atualizar Sócio'},
+                            {value : 'SocioList', text: 'Lista de Sócios'},
+                            {value : 'SocioNew', text: 'Novo Sócio'},
+                            {value : 'SocioUpdate', text: 'Atualizar Sócio'},
                         ]
                     },
                     {
                         label : 'Pagar Cotas',
                         options : [
-                            {value : 'SocioCotas', text: '- Pagar Cota'}
+                            {value : 'SocioCotas', text: 'Pagar Cota'}
                         ]
                     },
                     {
                         label : 'Packs', 
                         options : [
-                            {value : 'PackList', text: '- List Packs'},
-                            {value : 'PackNovo', text: '- Novo Pack'},
-                            {value : 'PackUpdate', text: '- Atualiza Pack'},
+                            {value : 'PackList', text: 'List Packs'},
+                            {value : 'PackNovo', text: ' Novo Pack'},
+                            {value : 'PackUpdate', text: 'Atualiza Pack'},
                         ]
                     }, 
                     {
                         label : 'Cotas (anos)',
                         options : [
-                            {value : 'CotaList', text: '- Lista de Cotas (anos)'},
-                            {value : 'CotaNova', text: '- Nova Cotas (ano)'},
+                            {value : 'CotaList', text: 'Lista de Cotas (anos)'},
+                            {value : 'CotaNova', text: 'Nova Cotas (ano)'},
                         ]
                     }
 
@@ -218,11 +226,27 @@
 
 
             , cleanReportFormAndClose(){
+                
+                this.sibeBar_close();
+
                 this.report.issueOrImprovment = null
                 this.report.janelaReport = null
                 this.report.description = ''
+                
             }
-            
+
+
+            , sibeBar_close(){
+                this.$refs.refSidebarReport.hide();
+            }
+
+            , sibeBar_open(){
+                this.$refs.refSidebarReport.open();
+            }
+
+            , sibeBar_toggle(){
+                this.$refs.refSidebarReport.toggle();
+            }
 
         }
 
