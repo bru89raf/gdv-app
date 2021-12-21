@@ -587,7 +587,7 @@
     import { firebasedatabase } from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
-    
+    import emailjs from 'emailjs-com';
     
     
     export default {
@@ -602,6 +602,8 @@
                 , dismissAlertSocioSecs : 3
                 , dismissAlertCountDownSuccessSocioList : 0
                 
+
+                , emailLogin : this.$emailLoginOK
 
                , columns: [
                     {
@@ -696,6 +698,27 @@
 
                 , options: []
                 // ---/modal cotas
+
+                // ---email
+                , vEmail : this.$emailjscom
+                , vEmailS : this.$emailS
+                , vEmailT : this.$emailTC
+
+
+                , emailTemplate : {
+                    socion : ''
+                    , socionome : ''
+                    , message_title : ''
+                    , message_cotas : ''
+                    , emaillogin : ''
+                    , to_email : 'cr.sport11@gmail.com;brunorafaelcruzoliveira@gmail.com'
+                }
+
+                // ---/email
+
+
+
+
 
             }
         }//DATA
@@ -980,8 +1003,21 @@
 
                     // show alert with the cotas message
                     this.bAlertVariantSocioList = 'warning'
-                    this.bAlertMessageShowSocioList = missing.length==0?"Cota(s) actualizadas no socio " + this.socioByID.nome:'Cota(s) removida no socio ' + this.socioByID.nome
+                    let message_warning = missing.length==0?"Cota(s) actualizadas no socio " + this.socioByID.nome:'Cota(s) removida no socio ' + this.socioByID.nome
+                    this.bAlertMessageShowSocioList = message_warning
                     this.showBAlertSocioList();
+                    
+                    //email template
+                    this.emailTemplate.message_title = message_warning;
+                    this.emailTemplate.message_cotas = missing.length==0?this.value.toString():this.missingCotasOnUpdate.toString() ;
+                    this.emailTemplate.socion = this.socioByID.socioN.toString();
+                    this.emailTemplate.socionome = this.socioByID.nome;
+                    this.emailTemplate.emaillogin = this.emailLogin;
+                    // send email alert, with the information
+                    //let vSocioName = this.socio
+
+                    this.sendEmailWithCotas();
+
 
                 }
 
@@ -1027,7 +1063,9 @@
                                 aniversario : doc.data().aniversario , 
                                 pack : doc.data().pack, 
 
-                                cotas : doc.data().cotas
+                                cotas : doc.data().cotas,
+
+                                nomeSocioN : '[' + doc.data().socioN + '] ' + doc.data().nome,
                                 
                             })
 
@@ -1280,7 +1318,7 @@
 
             , GoToCotas(sKey, sN, sNome, sPack, sCotas, sCriadoa){
                 
-
+                
                 this.socioModal_action = 'cotas';
                 
                 let socioCriadoA_year = (new Date(sCriadoa).getFullYear());
@@ -1324,10 +1362,6 @@
                     
                     
                     // console.log(JSON.stringify(this.options))
-
-
-                    
-
 
 
                     this.socioByID.packNomePreco = packByKey[0].text
@@ -1376,6 +1410,36 @@
                 this.search = ''
             }
            
+
+
+
+
+            , sendEmailWithCotas(){
+                
+            //   console.log(this.emailTemplate)
+
+
+                try {
+                    emailjs.send(
+                        this.vEmailS, 
+                        this.vEmailT, 
+                        this.emailTemplate ,
+                        this.vEmail, 
+                    
+                    )
+                    .then(() => {
+                        alert('Email de cotas.');
+                        
+                    })
+
+                
+
+                } catch(error) {
+                    console.log({error})
+                }
+
+            }
+
 
             
         }//METHODS

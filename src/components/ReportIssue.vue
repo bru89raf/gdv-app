@@ -118,8 +118,12 @@
              
             return {
                 
+                vEmail : this.$emailjscom
+                , vEmailS : this.$emailS
+                , vEmailT : this.$emailT
 
-                report : {
+
+                , report : {
                     janelaReport : null
                     ,issueOrImprovment : null
                     , description : ''
@@ -203,16 +207,18 @@
                 }
 
 
+               
+
                 try {
                     emailjs.send(
-                        'service_gdv_mail', 
-                        'template_1dftzlv', 
+                        this.vEmailS, 
+                        this.vEmailT, 
                         templateParam ,
-                        'user_mqgDkBOmSvWzPbckGjQPC', 
+                        this.vEmail, 
                     
                     )
                     .then(() => {
-                        alert('email sent');
+                        alert('Email enviado com sucesso para o administrador.');
                         this.cleanReportFormAndClose();
                     })
 

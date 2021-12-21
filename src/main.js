@@ -17,6 +17,10 @@ import VueExcelXlsx from 'vue-excel-xlsx';
 
 
 Vue.config.productionTip = false
+Vue.prototype.$emailjscom = 'user_mqgDkBOmSvWzPbckGjQPC';
+Vue.prototype.$emailS = 'service_gdv_mail';
+Vue.prototype.$emailT = 'template_1dftzlv';
+Vue.prototype.$emailTC = 'template_7vewybp';
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -30,11 +34,18 @@ Vue.component('b-form-select', BFormSelect)
 Vue.use(VueExcelXlsx);
 
 
+
+
+
+
 let app;
 
-// fireauth.onAuthStateChanged(user => {
-fireauth.onAuthStateChanged(() => {
+fireauth.onAuthStateChanged(user => {
+// fireauth.onAuthStateChanged(() => {
   //  console.log("userEmailLogin", user.email);
+
+  Vue.prototype.$emailLoginOK = user.email;
+
   if (!app) {
     app = new Vue({
       router,
