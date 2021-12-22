@@ -45,7 +45,7 @@
                         , ofLabel: 'de'
                         , allLabel: 'Todos'
                     }"   
-                    compactMode
+                    
                 >
 
 
@@ -691,6 +691,8 @@
                 , cotasJaPagas : []
                 , tagsCotasJaPagas : []
 
+                , newCotas : [] //difference between new cotas and already registered
+
                 , value : []  //alterar o nome para valueCotasOagas
                 , valueVarient : '' //COLOR of Labels
                 , search : '' //input to search for cotas
@@ -708,10 +710,15 @@
                 , emailTemplate : {
                     socion : ''
                     , socionome : ''
+                    , sociopackpreco : ''
                     , message_title : ''
                     , message_cotas : ''
                     , emaillogin : ''
-                    , to_email : 'cr.sport11@gmail.com;brunorafaelcruzoliveira@gmail.com'
+                    , to_email : '' //email list. Separator by ,
+                    , email_subject : ''
+                    , cotassize : ''
+                    , cotasnew : ''
+                    , cotasprice : ''
                 }
 
                 // ---/email
@@ -975,52 +982,73 @@
 
             , onRegistaEditaCotaFormSubmit(){
                 
-                if (window.confirm("Quer mesmo adicioncar as cotas como Pagas?\n " + this.value)){
-                    
-                    let checker = (arr, target) => target.every(v => arr.includes(v));
-                    let checkOldRegistration = checker(this.value, this.cotasJaPagas)
-                    
-                    let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))                
-                    
-                    let missing = checkMissing( this.value, this.cotasJaPagas)
-                    this.missingCotasOnUpdate = missing;
+                let checkNewCotas = (a1, a2) => a2.filter( d => !a1.includes(d))   
+                this.newCotas = checkNewCotas( this.cotasJaPagas, this.value );
+                
 
-                    if(!checkOldRegistration){
+                let checkMissing = (a1, a2) => a2.filter( d => !a1.includes(d))
+                let missing = checkMissing( this.value, this.cotasJaPagas)
+                this.missingCotasOnUpdate = missing;
+
+
+
+                if (this.newCotas.length != 0  || this.missingCotasOnUpdate.length != 0){
+
+                    // if (window.confirm("Quer mesmo adicioncar as cotas como Pagas?\n " + this.value)){
+                    if (window.confirm("Quer mesmo realizar a atualização?\n " + this.newCotas)){
                         
-                        if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
-                                                        
+                        let checker = (arr, target) => target.every(v => arr.includes(v));
+                        let checkOldRegistration = checker(this.value, this.cotasJaPagas)
+                        
+
+                        if(!checkOldRegistration){
+                            
+                            if (window.confirm("Cotas anteriormente pagas não se encontram na atualização.\nAs cotas em falta são: " + missing + "\nDeseja continuar?")){
+                                                            
+                                this.updateSocioRecord(this.value)
+                                this.modalSocioCotasClose()
+
+                            }
+
+                        }  else {
+                        
                             this.updateSocioRecord(this.value)
                             this.modalSocioCotasClose()
-
                         }
 
-                    }  else {
-                     
-                        this.updateSocioRecord(this.value)
-                        this.modalSocioCotasClose()
+
+                        // show alert with the cotas message
+                        this.bAlertVariantSocioList = 'warning'
+                        let message_warning = missing.length==0?"Cota(s) actualizadas no socio " + this.socioByID.nome:'Cota(s) removida no socio ' + this.socioByID.nome
+                        this.bAlertMessageShowSocioList = message_warning
+                        this.showBAlertSocioList();
+                        
+                        //email template
+                        this.emailTemplate.message_title = message_warning;
+                        this.emailTemplate.message_cotas = missing.length==0?this.value.toString():this.missingCotasOnUpdate.toString() ;
+                        this.emailTemplate.socion = this.socioByID.socioN.toString();
+                        this.emailTemplate.socionome = this.socioByID.nome;
+                        this.emailTemplate.sociopackpreco = this.socioByID.packNomePreco;
+                        this.emailTemplate.emaillogin = this.emailLogin;
+                        this.emailTemplate.email_subject = missing.length==0?'Cota(s) adicionada(s) | ' + this.socioByID.socioN + ' | '  + this.socioByID.nome:'Cota(s) removida(s) | ' + this.socioByID.socioN + ' | '+ this.socioByID.nome
+                        
+                        this.emailTemplate.cotassize = missing.length==0?this.newCotas.length.toString():'-'
+                        this.emailTemplate.cotasnew = missing.length==0?this.newCotas.toString():'-'
+                        this.emailTemplate.cotasprice = missing.length==0?this.valoraPagar.toString():'-'
+                        
+
+                        // console.log('Email sent:')
+                        // console.log(this.emailTemplate)
+                        
+                        this.sendEmailWithCotas();
+
+
                     }
 
 
-                    // show alert with the cotas message
-                    this.bAlertVariantSocioList = 'warning'
-                    let message_warning = missing.length==0?"Cota(s) actualizadas no socio " + this.socioByID.nome:'Cota(s) removida no socio ' + this.socioByID.nome
-                    this.bAlertMessageShowSocioList = message_warning
-                    this.showBAlertSocioList();
-                    
-                    //email template
-                    this.emailTemplate.message_title = message_warning;
-                    this.emailTemplate.message_cotas = missing.length==0?this.value.toString():this.missingCotasOnUpdate.toString() ;
-                    this.emailTemplate.socion = this.socioByID.socioN.toString();
-                    this.emailTemplate.socionome = this.socioByID.nome;
-                    this.emailTemplate.emaillogin = this.emailLogin;
-                    // send email alert, with the information
-                    //let vSocioName = this.socio
-
-                    this.sendEmailWithCotas();
-
-
+                }else{
+                    this.modalSocioCotasClose()
                 }
-
 
 
 
@@ -1318,7 +1346,8 @@
 
             , GoToCotas(sKey, sN, sNome, sPack, sCotas, sCriadoa){
                 
-                
+                 this.socioByID = [];
+
                 this.socioModal_action = 'cotas';
                 
                 let socioCriadoA_year = (new Date(sCriadoa).getFullYear());
@@ -1424,13 +1453,12 @@
                         this.vEmailS, 
                         this.vEmailT, 
                         this.emailTemplate ,
-                        this.vEmail, 
-                    
+                        this.vEmail 
                     )
-                    .then(() => {
-                        alert('Email de cotas.');
+                    // .then(() => {
+                    //     alert('Email de cotas.');
                         
-                    })
+                    // })
 
                 
 

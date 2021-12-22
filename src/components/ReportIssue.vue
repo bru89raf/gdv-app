@@ -160,6 +160,12 @@
                             {value : 'CotaList', text: 'Lista de Cotas (anos)'},
                             {value : 'CotaNova', text: 'Nova Cotas (ano)'},
                         ]
+                    },
+                    {
+                        label : 'Email',
+                        options : [
+                            {value : 'EmailCotas', text : 'Email Cotas Layout'}
+                        ]
                     }
 
 
