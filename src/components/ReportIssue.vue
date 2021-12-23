@@ -118,12 +118,10 @@
              
             return {
                 
-                vEmail : this.$emailjscom
-                , vEmailS : this.$emailS
-                , vEmailT : this.$emailT
+               
 
 
-                , report : {
+                report : {
                     janelaReport : null
                     ,issueOrImprovment : null
                     , description : ''
@@ -217,10 +215,10 @@
 
                 try {
                     emailjs.send(
-                        this.vEmailS, 
-                        this.vEmailT, 
+                        process.env.VUE_APP_EMAIL_SERVICE, 
+                        process.env.VUE_APP_EMAIL_TEMPLATE_REPORT, 
                         templateParam ,
-                        this.vEmail, 
+                        process.env.VUE_APP_EMAIL_ID
                     
                     )
                     .then(() => {

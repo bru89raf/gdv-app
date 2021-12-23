@@ -17,10 +17,7 @@ import VueExcelXlsx from 'vue-excel-xlsx';
 
 
 Vue.config.productionTip = false
-Vue.prototype.$emailjscom = 'user_mqgDkBOmSvWzPbckGjQPC';
-Vue.prototype.$emailS = 'service_gdv_mail';
-Vue.prototype.$emailT = 'template_1dftzlv';
-Vue.prototype.$emailTC = 'template_7vewybp';
+
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -35,18 +32,17 @@ Vue.use(VueExcelXlsx);
 
 
 
-
-
-
 let app;
 
 fireauth.onAuthStateChanged(user => {
 // fireauth.onAuthStateChanged(() => {
   //  console.log("userEmailLogin", user.email);
+  // console.log(user)
+  if (user) {
+    Vue.prototype.$emailLoginOK = user.email;
+  } 
 
-  Vue.prototype.$emailLoginOK = user.email;
-
-  if (!app) {
+  if (!app) { 
     app = new Vue({
       router,
       store,

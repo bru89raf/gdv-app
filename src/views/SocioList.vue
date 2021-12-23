@@ -156,7 +156,7 @@
                                 </div>
                                 
                                 <div>
-                                    <b-button  @click.prevent="deleteSocio(props.row.key)" class="btn btn-large btn-block btn-danger">
+                                    <b-button  @click.prevent="deleteSocio(props.row.key, props.row.nome)" class="btn btn-large btn-block btn-danger">
                                         <b-icon icon="trash" aria-hidden="true"></b-icon>     
                                     </b-button>                                     
                                 </div>
@@ -702,12 +702,7 @@
                 // ---/modal cotas
 
                 // ---email
-                , vEmail : this.$emailjscom
-                , vEmailS : this.$emailS
-                , vEmailT : this.$emailTC
-
-
-                , emailTemplate : {
+                , gEmailTemplate : {
                     socion : ''
                     , socionome : ''
                     , sociopackpreco : ''
@@ -858,7 +853,7 @@
 
             }
 
-            , deleteSocio(socioKey){          
+            , deleteSocio(socioKey, socioNome){          
                 
                 if( window.confirm("APAGAR Sócio?") ){
 
@@ -870,7 +865,7 @@
                             .delete()
                             .then(() => {
                                 this.bAlertVariantSocioList = 'danger'
-                                this.bAlertMessageShowSocioList = 'Sócio removido com sucesso!'
+                                this.bAlertMessageShowSocioList = 'Sócio '+ socioNome +' removido com sucesso!'
                                 this.showBAlertSocioList();
 
                                 // this.updateListOfNumbersAfterDelete();                              
@@ -940,12 +935,13 @@
                         .doc(this.socioKey_edit)
                         .update(this.socioModal)
                         .then(() => {
+                            // this.bAlertVariantSocioList = 'primary'
+                            this.bAlertVariantSocioList = 'success'
+                            this.bAlertMessageShowSocioList = 'Socio '+ this.socioModal.nome +' actulizado com sucesso!'
                                                         
                             this.modalSocioClose();
                             this.clean_SocioModal();
 
-                            this.bAlertVariantSocioList = 'primary'
-                            this.bAlertMessageShowSocioList = 'Socio ATUALIZADO com sucesso!'
                             this.showBAlertSocioList();
                         })
                         .catch((error) => {
@@ -990,6 +986,8 @@
                 let missing = checkMissing( this.value, this.cotasJaPagas)
                 this.missingCotasOnUpdate = missing;
 
+         
+
 
 
                 if (this.newCotas.length != 0  || this.missingCotasOnUpdate.length != 0){
@@ -1024,21 +1022,21 @@
                         this.showBAlertSocioList();
                         
                         //email template
-                        this.emailTemplate.message_title = message_warning;
-                        this.emailTemplate.message_cotas = missing.length==0?this.value.toString():this.missingCotasOnUpdate.toString() ;
-                        this.emailTemplate.socion = this.socioByID.socioN.toString();
-                        this.emailTemplate.socionome = this.socioByID.nome;
-                        this.emailTemplate.sociopackpreco = this.socioByID.packNomePreco;
-                        this.emailTemplate.emaillogin = this.emailLogin;
-                        this.emailTemplate.email_subject = missing.length==0?'Cota(s) adicionada(s) | ' + this.socioByID.socioN + ' | '  + this.socioByID.nome:'Cota(s) removida(s) | ' + this.socioByID.socioN + ' | '+ this.socioByID.nome
+                        this.gEmailTemplate.message_title = message_warning;
+                        this.gEmailTemplate.message_cotas = missing.length==0?this.value.toString():this.missingCotasOnUpdate.toString() ;
+                        this.gEmailTemplate.socion = this.socioByID.socioN.toString();
+                        this.gEmailTemplate.socionome = this.socioByID.nome;
+                        this.gEmailTemplate.sociopackpreco = this.socioByID.packNomePreco;
+                        this.gEmailTemplate.emaillogin = this.emailLogin;
+                        this.gEmailTemplate.email_subject = missing.length==0?'Cota(s) adicionada(s) | ' + this.socioByID.socioN + ' | '  + this.socioByID.nome:'Cota(s) removida(s) | ' + this.socioByID.socioN + ' | '+ this.socioByID.nome
                         
-                        this.emailTemplate.cotassize = missing.length==0?this.newCotas.length.toString():'-'
-                        this.emailTemplate.cotasnew = missing.length==0?this.newCotas.toString():'-'
-                        this.emailTemplate.cotasprice = missing.length==0?this.valoraPagar.toString():'-'
+                        this.gEmailTemplate.cotassize = missing.length==0?this.newCotas.length.toString():'-'
+                        this.gEmailTemplate.cotasnew = missing.length==0?this.newCotas.toString():'-'
+                        this.gEmailTemplate.cotasprice = missing.length==0?this.valoraPagar.toString():'-'
                         
-
+                        
                         // console.log('Email sent:')
-                        // console.log(this.emailTemplate)
+                        // console.log(this.gEmailTemplate)
                         
                         this.sendEmailWithCotas();
 
@@ -1136,6 +1134,19 @@
                             this.cotasAbertasObjecto = doc.data();    
                             
                         })
+                    })
+            }
+
+
+            , getEmailsList(){
+               
+                firebasedatabase
+                    .collection('/configEmails')
+                    .onSnapshot((snapshot) =>{
+                        snapshot.forEach((doc) => {
+                            this.gEmailTemplate.to_email = doc.data().emails
+                        })
+                        
                     })
             }
 
@@ -1346,7 +1357,7 @@
 
             , GoToCotas(sKey, sN, sNome, sPack, sCotas, sCriadoa){
                 
-                 this.socioByID = [];
+                this.socioByID = [];
 
                 this.socioModal_action = 'cotas';
                 
@@ -1445,16 +1456,17 @@
 
             , sendEmailWithCotas(){
                 
-            //   console.log(this.emailTemplate)
+            //   console.log(this.gEmailTemplate)
 
 
                 try {
                     emailjs.send(
-                        this.vEmailS, 
-                        this.vEmailT, 
-                        this.emailTemplate ,
-                        this.vEmail 
+                        process.env.VUE_APP_EMAIL_SERVICE, 
+                        process.env.VUE_APP_EMAIL_TEMPLATE_COTAS, 
+                        this.gEmailTemplate ,
+                        process.env.VUE_APP_EMAIL_ID
                     )
+                   
                     // .then(() => {
                     //     alert('Email de cotas.');
                         
@@ -1491,6 +1503,10 @@
                 
                 // Get ALL YEARS
                 this.getCotas();
+
+                // GET EMILS LIST 
+                this.getEmailsList()
+                
                
                
            
