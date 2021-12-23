@@ -40,8 +40,8 @@
                                     :options="optionsIssueImprovment"
                                     value-field="value"
                                     text-field="text"
-                                    id="janelaReport"  
-                                    name="janelaReport" 
+                                    id="selectTipo"  
+                                    name="selectTipo" 
                                     placeholder="Escolher opção"
                                     required
                                     
@@ -59,8 +59,8 @@
                                     :options="optionsToReport"
                                     value-field="value"
                                     text-field="text"
-                                    id="janelaReport"  
-                                    name="janelaReport" 
+                                    id="selectJanela"  
+                                    name="selectJanela" 
                                     placeholder="Escolher opção"
                                     required
                                     
