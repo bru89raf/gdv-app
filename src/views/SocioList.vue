@@ -23,6 +23,7 @@
 
             </b-alert>
             
+             <!-- VUE TABLE  - LIST SCOSIO -->
             <vue-good-table
                 :columns="columns"
                 :rows="rows"
@@ -150,7 +151,7 @@
                             >
                                 <div>
                                     <strong>Sócio N.</strong>: {{props.row.socioN}}<br>
-                                    <strong>Email</strong>: {{props.row.email}}<br>
+                                    <strong>Email</strong>: <a :href="`mailto:${props.row.email}`">{{props.row.email}}</a><br>
                                     <strong>Morada</strong>: {{props.row.morada}}<br>
                                     <strong>NIF</strong>: {{props.row.nif}}<br>
                                 </div>
@@ -168,7 +169,8 @@
                 </template>
 
             </vue-good-table>       
-            
+            <!-- //END VUE TABLE  - LIST SCOSIO -->
+
 
             <!-- MODAL FOR CREATE OR UPDATE SOCIO -->
             <b-modal 
@@ -393,9 +395,7 @@
 
             
             </b-modal>            
-
             <!-- //END MODAL FOR CREATE OR UPDATE -->
-
             
             
             <!-- MODAL FOR COTAS -->
@@ -567,7 +567,6 @@
 
             </b-modal>
             <!-- //END MODAL FOR COTAS -->
-
 
 
 
