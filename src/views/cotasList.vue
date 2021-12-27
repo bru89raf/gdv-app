@@ -37,7 +37,7 @@
                     :rows="cotas"
                     :search-options="{
                         enabled: true,
-                        placeholder : 'Pesquisar na lista'
+                        placeholder : table_option.placeholder
                     }"
                     :sort-options="{
                         enable : true, 
@@ -45,13 +45,13 @@
                     }"
                     :pagination-options="{
                         enabled: true
-                        , perPage: 5
-                        , perPageDropdown: [5, 10, 15]
-                        , nextLabel: 'prox.'
-                        , prevLabel: 'ant.'
-                        , rowsPerPageLabel: 'Por pag'
-                        , ofLabel: 'de'
-                        , allLabel: 'Todos'
+                        , perPage: table_option.perPage
+                        , perPageDropdown: table_option.perPageDropdown
+                        , nextLabel: table_option.nextLabel
+                        , prevLabel: table_option.prevLabel
+                        , rowsPerPageLabel: table_option.rowsPerPageLabel
+                        , ofLabel: table_option.ofLabel
+                        , allLabel: table_option.allLabel
                     }"   
 
                 >
@@ -65,7 +65,7 @@
 
                 <template slot="table-row" slot-scope="props">
                     <span v-if="props.column.field == 'after'">
-                        <b-button  @click.prevent="deleteCota(props.row.key)" class="btn btn-danger">
+                        <b-button  @click.prevent="deleteCota(props.row.key, props.row.ano)" class="btn btn-danger">
                             <b-icon icon="trash" aria-hidden="true"></b-icon>     
                         </b-button> 
                     </span>
@@ -126,6 +126,7 @@
     import {firebasedatabase } from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table'; 
+    import { tableConfig, cotas_config } from '../siteConfigs'
 
     export default {
 
@@ -153,14 +154,15 @@
                     }
                 ]
 
-                , minCotaAberta : 2018
-                , maxCotaAberta : 2200
+                , minCotaAberta : cotas_config.minCotaAberta
+                , maxCotaAberta : cotas_config.maxCotaAberta
 
                 , dismissSecs : 2
                 , dismissCountDown_cotas : 0
                 , bAlertVariant : ''
                 , bAlertMessageCotas : ''
 
+                , table_option : {}
             
             }
 
@@ -174,6 +176,9 @@
                 
         , created() {
             
+            this.table_option = tableConfig;
+
+
             firebasedatabase
                 .collection('/cotas')
                 .onSnapshot((snapshot) =>{
@@ -201,7 +206,8 @@
                     .then(() => {
 
                         this.bAlertVariant = 'success'
-                        this.bAlertMessageCotas = 'Ano de Cota Adiciona com Sucesso!'
+                        // this.bAlertMessageCotas = 'Ano de Cota Adiciona com Sucesso!'                        
+                        this.bAlertMessageCotas = cotas_config.add_msg.replace(cotas_config.replace_str, this.novaCota.ano)
 
                         this.showAlertSuccess();
 
@@ -223,21 +229,34 @@
             }        
             
             
-            , deleteCota(id) {
-                if( window.confirm("Quer mesmo apagar o ano?")){
-                    firebasedatabase
-                        .collection('/cotas')
-                        .doc(id)
-                        .delete()
-                        .then(()  => {
-                            // console.log("Cota apagada com Sucesso !");
-                            this.bAlertVariant = 'danger'
-                            this.bAlertMessageCotas = 'Cota Removida com Sucesso!'
-                            this.showAlertRemove();
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        })
+            , deleteCota(id, vAno) {
+
+                //  if( window.confirm("APAGAR Sócio?") ){
+                //     if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
+
+
+
+
+
+
+                if( window.confirm(cotas_config.delete_msg_confirm.replace(cotas_config.replace_str, vAno)) ){
+
+                    if (window.confirm(cotas_config.delete_msg_double_confirm.replace(cotas_config.replace_str, vAno)))
+                    {
+                        firebasedatabase
+                            .collection('/cotas')
+                            .doc(id)
+                            .delete()
+                            .then(()  => {
+                                // console.log("Cota apagada com Sucesso !");
+                                this.bAlertVariant = 'danger'
+                                this.bAlertMessageCotas = cotas_config.delete_msg.replace(cotas_config.replace_str, vAno)
+                                this.showAlertRemove();
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                    }
 
                 }
 

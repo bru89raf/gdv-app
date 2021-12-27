@@ -29,7 +29,7 @@
                 :rows="rows"
                 :search-options="{
                     enabled: true,
-                    placeholder : 'Pesquisar na lista'
+                    placeholder : table_option.placeholder
                 }"
                 :sort-options="{
                     enable : true, 
@@ -38,6 +38,18 @@
 
                 :pagination-options="{
                         enabled: true
+                        , perPage: table_option.perPage
+                        , perPageDropdown: table_option.perPageDropdown
+                        , nextLabel: table_option.nextLabel
+                        , prevLabel: table_option.prevLabel
+                        , rowsPerPageLabel: table_option.rowsPerPageLabel
+                        , ofLabel: table_option.ofLabel
+                        , allLabel: table_option.allLabel
+                    }"   
+                    
+                >
+                <!-- :pagination-options="{
+                        enabled: true
                         , perPage: 5
                         , perPageDropdown: [5, 10, 15]
                         , nextLabel: 'prox.'
@@ -45,9 +57,7 @@
                         , rowsPerPageLabel: 'Por pag'
                         , ofLabel: 'de'
                         , allLabel: 'Todos'
-                    }"   
-                    
-                >
+                    }"    -->
 
 
                 <div slot="table-actions">
@@ -588,6 +598,7 @@
     import { VueGoodTable } from 'vue-good-table';
     import emailjs from 'emailjs-com';
     
+    import { tableConfig } from '../siteConfigs'
     
     export default {
         name : "Socio-List" ,
@@ -717,7 +728,7 @@
 
                 // ---/email
 
-
+                , table_option : {}
 
 
 
@@ -1062,8 +1073,6 @@
                         console.log(error)
                     })
             }
-
-
 
 
             // :::: GETs and TRANSFORMATIONS
@@ -1450,9 +1459,6 @@
             }
            
 
-
-
-
             , sendEmailWithCotas(){
                 
             //   console.log(this.gEmailTemplate)
@@ -1494,6 +1500,8 @@
 
         , created() {
                 
+                this.table_option = tableConfig
+                                
                 // get all os partenrs
                 this.getListOfSocios();
 

@@ -28,19 +28,19 @@
                 :rows="packs"
                 :search-options="{
                     enabled: true,
-                    placeholder : 'Pesquisar na lista'
+                    placeholder : table_option.placeholder
                     }" 
 
                 :pagination-options="{
                         enabled: true
-                        , perPage: 5
-                        , perPageDropdown: [5, 10, 15]
-                        , nextLabel: 'prox'
-                        , prevLabel: 'ant'
-                        , rowsPerPageLabel: 'Por pag'
-                        , ofLabel: 'de'
-                        , allLabel: 'Todos'
-                        }"   
+                        , perPage: table_option.perPage
+                        , perPageDropdown: table_option.perPageDropdown
+                        , nextLabel: table_option.nextLabel
+                        , prevLabel: table_option.prevLabel
+                        , rowsPerPageLabel: table_option.rowsPerPageLabel
+                        , ofLabel: table_option.ofLabel
+                        , allLabel: table_option.allLabel
+                    }"   
 
 
             >
@@ -57,7 +57,7 @@
                             <b-icon icon="pencil"></b-icon>  
                         </b-button> 
                         
-                        <b-button  @click.prevent="deletePack(props.row.key)" class="btn btn-danger">
+                        <b-button  @click.prevent="deletePack(props.row.key, props.row.nome )" class="btn btn-danger">
                             <b-icon icon="trash" aria-hidden="true"></b-icon>     
                         </b-button> 
 
@@ -160,6 +160,7 @@
     import {firebasedatabase} from '../firebaseDb'
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table'; 
+    import { tableConfig, pack_config } from '../siteConfigs'
 
     export default {
         
@@ -208,7 +209,9 @@
                     , descricao : ''
                     , preco : ''
                 }
-               
+
+
+                , table_option : {}
 
             }
         }//DATA
@@ -219,8 +222,11 @@
         }//COMPONENTS
 
         , created() {
-               
-               firebasedatabase
+            
+            this.table_option = tableConfig
+
+
+            firebasedatabase
                 .collection('/packs')
                 .onSnapshot( (snapshot) => {
                     this.packs = [];
@@ -270,7 +276,8 @@
                     .then( () => {
                         
                         this.bAlertPack_variant = 'success';
-                        this.bAlertPack_Message = 'Pack adiciona com sucesso!'
+                        // this.bAlertPack_Message = 'Pack adiciona com sucesso!'
+                        this.bAlertPack_Message = pack_config.add_msg.replace(pack_config.replace_str, this.packModal.nome)
                         this.modalPackClose();
                         this.showAlertOnPack();
                         this.scrollToTop();
@@ -285,7 +292,7 @@
 
             , firebase_UpdatePack(){
                 
-                if(window.confirm('Deseja mesmo atualizar o Pack?')){
+                if(window.confirm( pack_config.update_msg_confirm.replace(pack_config.replace_str, this.packModal.nome) )){
                     firebasedatabase
                         .collection('/packs')
                         // .doc(this.$route.params.id)
@@ -294,7 +301,7 @@
                         .then(() => {
                             
                             this.bAlertPack_variant = 'primary';
-                            this.bAlertPack_Message = 'Pack atualizado com sucesso!'
+                            this.bAlertPack_Message = pack_config.update_msg.replace(pack_config.replace_str, this.packModal.nome)
                             this.showAlertOnPack();
                             this.modalPackClose();
                             this.scrollToTop();
@@ -308,22 +315,30 @@
             }
 
 
-            , deletePack(packId) {
+            , deletePack(packId, packNome) {
 
-                if( window.confirm("Quer mesmo apagar o Pack?")){
-                    firebasedatabase
-                        .collection('/packs')
-                        .doc(packId)
-                        .delete()
-                        .then(() => {
+                // if( window.confirm("Quer mesmo apagar o Pack?")){
+                if( window.confirm(pack_config.delete_msg_confirm.replace(pack_config.replace_str, packNome))){
+                
+                
+                    if( window.confirm(pack_config.delete_msg_double_confirm.replace(pack_config.replace_str, packNome))){
 
-                            this.bAlertPack_variant = 'danger'
-                            this.bAlertPack_Message = 'Pack removido com sucesso! '
-                            this.showAlertOnPack();
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
+                        firebasedatabase
+                            .collection('/packs')
+                            .doc(packId)
+                            .delete()
+                            .then(() => {
+    
+                                this.bAlertPack_variant = 'danger'
+                                // this.bAlertPack_Message = 'Pack removido com sucesso! '
+                                this.bAlertPack_Message = pack_config.delete_msg.replace(pack_config.replace_str, packNome);
+                                this.showAlertOnPack();
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                    }
+
                 }
 
             }
@@ -379,7 +394,8 @@
         , computed : {
 
             bModalTitle_PackSocio(){
-                return this.packKey_edit.length!=0?'Editar Pacote':'Novo Pacote'
+                // return this.packKey_edit.length!=0?'Editar Pacote':'Novo Pacote'
+                return this.packKey_edit.length!=0?pack_config.btn_pack_edit:pack_config.btn_pack_new
             }
 
             , bModalButtonVariant_PackSocio(){
@@ -387,11 +403,12 @@
             }
 
             , packModalNameValidation() {
-                return this.packModal.nome.length==0?null:this.packModal.nome.length > 3;
+                return this.packModal.nome.length==0?null:this.packModal.nome.length > pack_config.packModalNome_min_length;
             }
             
             , packModalPriceValidation() {
-                return this.packModal.preco.length==0?null:this.packModal.preco >= 1.00;
+                // return this.packModal.preco.length==0?null:this.packModal.preco >= 1.00;
+                return this.packModal.preco.length==0?null:this.packModal.preco >= pack_config.packModalPreco_min;
             } 
 
         }//COMPUTED
