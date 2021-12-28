@@ -719,7 +719,7 @@
                     , message_title : ''
                     , message_cotas : ''
                     , emaillogin : ''
-                    , to_email : '' //email list. Separator by ,
+                    , to_email : '' //email list. Separator by , . This are comming from the collection(firebase)
                     , email_subject : ''
                     , cotassize : ''
                     , cotasnew : ''

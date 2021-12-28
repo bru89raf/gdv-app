@@ -148,8 +148,13 @@ const vReport_configs = {
 
 }
 
+
+
+
+
 export const tableConfig    = vueTable_config;
-export const report_config  = vReport_configs;
+export const report_config = vReport_configs;
+
 export const cotas_config   = vCotas_configs;
 export const pack_config    = vPacks_configs;
 export const socio_config   = vSocio_configs;
