@@ -598,7 +598,7 @@
     import { VueGoodTable } from 'vue-good-table';
     import emailjs from 'emailjs-com';
     
-    import { tableConfig } from '../siteConfigs'
+    import { tableConfig, socio_config } from '../siteConfigs'
     
     export default {
         name : "Socio-List" ,
@@ -738,7 +738,8 @@
         , computed : {
             
             bModalTitle_Socio(){
-                return this.socioKey_edit.length!=0?'Editar Socio':'Novo Socio';
+                // return this.socioKey_edit.length!=0?'Editar Socio':'Novo Socio';
+                return this.socioKey_edit.length!=0?socio_config.btn_socio_edit:socio_config.btn_socio_new;
             }
 
             , bModalButtonVariant_Socio() {
@@ -787,7 +788,8 @@
 
             , searchDesc() {
                 if (this.criteria && this.availableOptions.length === 0) {
-                    return 'Não foi encontrada nenhuma cota.'
+                    // return 'Não foi encontrada nenhuma cota.'
+                    return socio_config.search_cota_not_found;
                 }
                 return ''
             }
@@ -798,7 +800,8 @@
             }    
 
             , checkLableCotasJaPagas(){
-                return this.cotasJaPagas.length == 0 &&  this.value.length == 0?'Nenhuma cota paga ate o momento!' : 'Cotas pagas'
+                // return this.cotasJaPagas.length == 0 &&  this.value.length == 0?'Nenhuma cota paga ate o momento!' : 'Cotas pagas'
+                return this.cotasJaPagas.length == 0 &&  this.value.length == 0?socio_config.check_lable_cotas_nok : socio_config.check_lable_cotas_ok
             }
             
             , checkTagsJaPagasMasRemovidas(){
@@ -865,17 +868,20 @@
 
             , deleteSocio(socioKey, socioNome){          
                 
-                if( window.confirm("APAGAR Sócio?") ){
-
-                    if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
-
+                // if( window.confirm("APAGAR Sócio?") ){
+                //     if( window.confirm("Quer prosseguir com a remoção?\n(Está operação não será possivel de reverter)") ) {
+                if( window.confirm(socio_config.delete_msg_confirm.replace(socio_config.replace_str, socioNome)) ){
+                    if( window.confirm(socio_config.delete_msg_double_confirm.replace(socio_config.replace_str, socioNome)) ) {
+                
                         firebasedatabase
                             .collection('/Socio')
                             .doc(socioKey)
                             .delete()
                             .then(() => {
                                 this.bAlertVariantSocioList = 'danger'
-                                this.bAlertMessageShowSocioList = 'Sócio '+ socioNome +' removido com sucesso!'
+                                this.dismissAlertSocioSecs = socio_config.dismissAlert
+                                // this.bAlertMessageShowSocioList = 'Sócio '+ socioNome +' removido com sucesso!'
+                                this.bAlertMessageShowSocioList = socio_config.delete_msg.replace(socio_config.replace_str, socioNome)
                                 this.showBAlertSocioList();
 
                                 // this.updateListOfNumbersAfterDelete();                              
@@ -916,13 +922,17 @@
                             this.modalSocioClose();
                             
                             this.bAlertVariantSocioList = 'success'
-                            this.bAlertMessageShowSocioList = 'Socio(' + vSname + ') adicionado com sucesso!'
+                            this.dismissAlertSocioSecs = socio_config.dismissAlert
+                            // this.bAlertMessageShowSocioList = 'Socio(' + vSname + ') adicionado com sucesso!'
+                            this.bAlertMessageShowSocioList = socio_config.add_msg.replace(socio_config.replace_str, vSname);
                             this.showBAlertSocioList();
                             
                         }else{
                             
                             this.bAlertVariantSocioList_modal = 'success'
-                            this.bAlertMessageShowSocioList_modal = 'Socio(' + vSname + ') adicionado com sucesso!'                         
+                            this.dismissAlertSocioSecs_modal = socio_config.dismissAlert
+                            // this.bAlertMessageShowSocioList_modal = 'Socio(' + vSname + ') adicionado com sucesso!'                         
+                            this.bAlertMessageShowSocioList_modal = socio_config.add_msg.replace(socio_config.replace_str, vSname);                        
                             this.showBAlertSocioList_modal();
 
                         }
@@ -937,7 +947,8 @@
 
             , firebase_updateSocio() {
                
-                if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
+                // if(window.confirm("Deseja mesmo atualizar os dados do Sócio?")){                 
+                if(window.confirm(socio_config.update_msg_confirm.replace(socio_config.replace_str, this.socioModal.nome))){                 
                    
                    firebasedatabase
                         .collection('/Socio')
@@ -947,7 +958,9 @@
                         .then(() => {
                             // this.bAlertVariantSocioList = 'primary'
                             this.bAlertVariantSocioList = 'success'
-                            this.bAlertMessageShowSocioList = 'Socio '+ this.socioModal.nome +' actulizado com sucesso!'
+                            this.dismissAlertSocioSecs = socio_config.dismissAlert
+                            // this.bAlertMessageShowSocioList = 'Socio '+ this.socioModal.nome +' actulizado com sucesso!'
+                            this.bAlertMessageShowSocioList = socio_config.update_msg.replace(socio_config.replace_str, this.socioModal.nome)
                                                         
                             this.modalSocioClose();
                             this.clean_SocioModal();
@@ -1425,13 +1438,15 @@
                 
                 }else{
                     
-                    this.dismissAlertSocioSecs = 5
+                    // this.dismissAlertSocioSecs = 5
+                    this.dismissAlertSocioSecs = socio_config.dismissAlert_long
                     this.bAlertVariantSocioList = 'danger'
 
                     if (packByKey.length == 0){
-                        this.bAlertMessageShowSocioList = 'Sócio não tem nenhum pacote associado. Verifique os campos do mesmo.'
+                        // this.bAlertMessageShowSocioList = 'Sócio não tem nenhum pacote associado. Verifique os campos do mesmo.'
+                        this.bAlertMessageShowSocioList = socio_config.cotas_socio_no_pack_error.replace(socio_config.replace_cotas_str, this.socioByID.nome  )
                     }else{
-                        this.bAlertMessageShowSocioList = 'Consulte o administrador do site. Anote o numero de sócio ou nome do sócio.'
+                        this.bAlertMessageShowSocioList = socio_config.cotas_socio_admin_error ;
                         console.log('VALIDATION:: Problem with \'criadoa\' field. Maybe the field is empty (sN : ' + this.socioByID.socioN +').')
                     }
 

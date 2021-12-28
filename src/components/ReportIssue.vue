@@ -1,12 +1,5 @@
 <template>
-    
-    <!-- 
-        
-        Not in use for now
-        Maybe we will used this on the future updates.
-
-     -->
-    
+      
     
     <div>
         <b-sidebar 
@@ -17,18 +10,7 @@
             backdrop-variant="dark"
             backdrop
             >
-            <!-- <div class="px-3 py-2">
-                <p>                
-                   Reportar correção ou melhoria
-                </p>
 
-                <div class="d-flex justify-content-center mb-3">
- 
-                <b-form-select v-model="selected" :options="options" size="sm" class="mt-3"></b-form-select>
-
-                </div>
-
-            </div> -->
             <div class="px-3 py-2">   
                 <form @submit.prevent="sendEmail" >
                     
@@ -107,7 +89,8 @@
 </template>
 
 <script>
-   import emailjs from 'emailjs-com';
+    import emailjs from 'emailjs-com';
+    import { report_config } from '../siteConfigs'
 
     export default {
         name : "sibeBarReportIssueOrImprove"  
@@ -118,92 +101,27 @@
              
             return {
                 
-               
-
-
                 report : {
                     janelaReport : null
                     ,issueOrImprovment : null
                     , description : ''
                     
-                }       
+                }    
                 
-                , optionsToReport : [
-                    {value : null, text: 'Escolher opção', disabled : true},
-                    {
-                        label : 'Sócios',
-                        options : [
-                            {value : 'SocioList', text: 'Lista de Sócios'},
-                            {value : 'SocioNew', text: 'Novo Sócio'},
-                            {value : 'SocioUpdate', text: 'Atualizar Sócio'},
-                        ]
-                    },
-                    {
-                        label : 'Pagar Cotas',
-                        options : [
-                            {value : 'SocioCotas', text: 'Pagar Cota'}
-                        ]
-                    },
-                    {
-                        label : 'Packs', 
-                        options : [
-                            {value : 'PackList', text: 'List Packs'},
-                            {value : 'PackNovo', text: ' Novo Pack'},
-                            {value : 'PackUpdate', text: 'Atualiza Pack'},
-                        ]
-                    }, 
-                    {
-                        label : 'Cotas (anos)',
-                        options : [
-                            {value : 'CotaList', text: 'Lista de Cotas (anos)'},
-                            {value : 'CotaNova', text: 'Nova Cotas (ano)'},
-                        ]
-                    },
-                    {
-                        label : 'Email',
-                        options : [
-                            {value : 'EmailCotas', text : 'Email Cotas Layout'}
-                        ]
-                    }
-
-
-
-
-                    
-                ]
+                , optionsIssueImprovment : report_config.option_issue_or_improve
+                , optionsToReport : report_config.option_windows
                 
-                , optionsIssueImprovment : [
-                    {value : null, text: 'Escolher opção', disabled : true},
-                    {value : 'Improvment', text: 'Melhoria'},
-                    {value : 'Issue', text: 'Corrigir'},
-                ]
-               
-
-
             }
 
-        }
-
-        , created() {
-       
         }
 
 
         , methods : {
             
-            reportFormSubmit() {
+    
 
-                console.log(this.report)
-
-            }
-
-
-            , sendEmail() {
-                // console.log(this.report.janelaReport)
-                // console.log(this.report.issueOrImprovment)
-                // console.log(this.report.description)
-                // console.log(JSON.stringify(e))
-                
+            sendEmail() {
+                        
                 let templateParam = {
                     typeofissue : this.report.issueOrImprovment,
                     janelaReport : this.report.janelaReport,
@@ -211,25 +129,25 @@
                 }
 
 
-               
+                if(window.confirm(report_config.report_send_email_msg_confirm)) {
+                    try {
+                        emailjs.send(
+                            process.env.VUE_APP_EMAIL_SERVICE, 
+                            process.env.VUE_APP_EMAIL_TEMPLATE_REPORT, 
+                            templateParam ,
+                            process.env.VUE_APP_EMAIL_ID
+                        
+                        )
+                        .then(() => {
+                            // alert('Email enviado com sucesso para o administrador.');
+                            alert(report_config.report_msg_alert);
+                            this.cleanReportFormAndClose();
+                        })                
+    
+                    } catch(error) {
+                        console.log({error})
+                    }
 
-                try {
-                    emailjs.send(
-                        process.env.VUE_APP_EMAIL_SERVICE, 
-                        process.env.VUE_APP_EMAIL_TEMPLATE_REPORT, 
-                        templateParam ,
-                        process.env.VUE_APP_EMAIL_ID
-                    
-                    )
-                    .then(() => {
-                        alert('Email enviado com sucesso para o administrador.');
-                        this.cleanReportFormAndClose();
-                    })
-
-                
-
-                } catch(error) {
-                    console.log({error})
                 }
 
             } 
