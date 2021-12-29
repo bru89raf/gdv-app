@@ -9,11 +9,12 @@ The ideia was to create an CRUD application.
 
 What you can find on the application:
     * Read Data
-    * Authentication ( Login to specific emails) 
+    * Authentication ( Login to specific email) 
     * Insert 
     * Update
     * Delete
     * VueGoodTable
+	* EmailJS-com
 
 *Note*: This is the first project, so, if you find some issues / probems or things to improve, please let me know.
 ```

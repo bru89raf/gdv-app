@@ -132,10 +132,10 @@
                 if(window.confirm(report_config.report_send_email_msg_confirm)) {
                     try {
                         emailjs.send(
-                            process.env.VUE_APP_EMAIL_SERVICE, 
-                            process.env.VUE_APP_EMAIL_TEMPLATE_REPORT, 
+                            process.env.VUE_APP_EMAIL_REPORT_SERVICE, 
+                            process.env.VUE_APP_EMAIL_REPORT_TEMPLATE_REPORT, 
                             templateParam ,
-                            process.env.VUE_APP_EMAIL_ID
+                            process.env.VUE_APP_EMAIL_REPORT_ID
                         
                         )
                         .then(() => {
