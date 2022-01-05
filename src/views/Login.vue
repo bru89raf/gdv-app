@@ -59,8 +59,9 @@
       pressLogin (){
             fireauth
                 .signInWithEmailAndPassword(this.email, this.password)
-                .then(data => {
-                    console.log(data);
+                // .then(data => {
+                .then( () => {
+                    // console.log(data);
                     this.$router.replace({name : "SocioList"})
                 })
                 .catch(error => {
